@@ -1,0 +1,3 @@
+[console_scripts]
+lr_cnv = long_read_pipeline.main:main
+

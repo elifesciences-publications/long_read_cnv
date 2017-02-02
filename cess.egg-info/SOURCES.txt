@@ -1,0 +1,9 @@
+setup.py
+cess.egg-info/PKG-INFO
+cess.egg-info/SOURCES.txt
+cess.egg-info/dependency_links.txt
+cess.egg-info/entry_points.txt
+cess.egg-info/not-zip-safe
+cess.egg-info/top_level.txt
+long_read_pipeline/main.py
+long_read_pipeline/samples.py
