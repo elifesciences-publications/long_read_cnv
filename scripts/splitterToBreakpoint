@@ -42,8 +42,10 @@ def _extract_breakpoints(region, output_prefix, slop=50, fasta_input_file="/User
     assembly = pysam.Fastafile(fasta_input_file)
     seq_fastq = assembly.fetch(region=region.ID)
     dirname = os.path.dirname(output_prefix)
+    base_name_file = os.path.basename(fasta_input_file).split(".")[0]
+    dirname = os.path.join(dirname, base_name_file) 
     try:
-        os.mkdir(os.path.join(dirname,"breakpoints"))
+        os.makedirs(os.path.join(dirname,"breakpoints"))
     except OSError:
         pass 
     with open(os.path.join(dirname,"breakpoints",region.event_id + ".brk1.fasta"), "w") as brk1_f:
@@ -128,10 +130,14 @@ def processFasta(region, output_prefix, fasta_input_file="/Users/smilefreak/Prog
     assembly = pysam.Fastafile(fasta_input_file)
     seq_fastq = assembly.fetch(region=region.ID)
     dirname = os.path.dirname(output_prefix)
+    base_name_file = os.path.basename(fasta_input_file).split(".")[0]
+    dirname = os.path.join(dirname, base_name_file)
+    print(dirname)
     try:
-        os.mkdir(os.path.join(dirname,"event_fastas"))
+        os.makedirs(os.path.join(dirname,"event_fastas"))
     except OSError:
-        pass 
+        pass
+    print(os.path.join(dirname, "event_fastas"))
     with open(os.path.join(dirname,"event_fastas",region.event_id + ".fasta"), "w") as out_f:
         header = ">" + region.event_id  +"\n"
         seq = ""
@@ -173,7 +179,7 @@ def splitterToBreakpoint(contigFile,splitReadSlop,localRange, reference_genome, 
         contigs = open(str(contigFile))
     inversion_out = open(os.path.join(output_prefix + ".inv"), "w")
     cnv_out = open(os.path.join(output_prefix +".cnv"),"w")
-    header = "chrom1\tbreakstart1\tbreakend1\tchrom2\tbreakstart2\tbreakend2\tID\tscore\tstrand1\tstrand2\tquerystart1\tqueryend1\tquerystart2\tqueryend2\tminnonoverlap\tquerylength\tqualscores\tvariant_type\tunaccount_for_sequence\tevent_length\n"
+    header = "chrom1\tbreakstart1\tbreakend1\tchrom2\tbreakstart2\tbreakend2\tID\tscore\tstrand1\tstrand2\tquerystart1\tqueryend1\tquerystart2\tqueryend2\tminnonoverlap\tquerylength\tqualscores\tvariant_type\tunaccount_for_sequence\tevent_length\tevent_id\n"
     inversion_out.write(header)
     cnv_out.write(header)
     for line in contigs:
