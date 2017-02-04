@@ -95,7 +95,9 @@ def genotype_cnvs_wrap(args):
         # Have to align 
         align.align_reads(sample,args.temp_dir, reference_file, skip=True) 
         input_cnvs = (os.path.join(args.input_directory, sample.samples_name + ".cnv"))
-        cnv_calls.CNVs(input_cnvs, sample.bam_file)
+        cnvs = cnv_calls.CNVs(input_cnvs, sample.bam_file)
+        for i in range(len(cnvs)):
+            cnvs.extract_windowed_bam_reads(i)
 
 def cnv_call_wrap(args):
     """

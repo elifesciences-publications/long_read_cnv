@@ -7,6 +7,7 @@ long_read_pipeline/samples.py
 long_read_pipeline/cnv/__init__.py
 long_read_pipeline/cnv/cnv.py
 long_read_pipeline/cnv/cnv_calls.py
+long_read_pipeline/cnv/genotype.py
 long_read_pipeline/cnv/genotype_cnvs.py
 long_read_pipeline/pilon/__init__.py
 long_read_pipeline/pilon/pilon.py
