@@ -29,7 +29,7 @@ from long_read_pipeline import input_file
 from long_read_pipeline.speedseq import align
 from long_read_pipeline.utils import scaffold
 from long_read_pipeline.pilon import pilon 
-from long_read_pipeline.cnv import cnv
+from long_read_pipeline.cnv import cnv, cnv_calls
 
 def setup_log(log_file):
     logFormatter = logging.Formatter("%(asctime)s [%(levelname)-5.5s]  %(message)s")
@@ -60,14 +60,42 @@ def parse_args():
     # Causal betas
     cnv_parser= subparsers.add_parser("callcnvs", help="assembly_to_var")
     cnv_parser.add_argument("-i", "--input-file", dest="input_file", help="Input file", required=True)
-    cnv_parser.add_argument("-t", "--temp-working-dir", dest="temp_dir", help="Reference file", default="tmp_dir") 
+    cnv_parser.add_argument("-t", "--temp-working-dir", dest="temp_dir", help="working dir file", default="tmp_dir") 
     cnv_parser.add_argument("-d", "--directory", dest="input_directory", help="Input directory", required=True)
     cnv_parser.add_argument("-o", "--output-directory", dest="output_directory", help="Output directory", default="out_dir") 
     cnv_parser.add_argument("-q", "--map-quality", dest="mapping_quality", help="Mapping Quality", default=50)
     cnv_parser.set_defaults(func=cnv_call_wrap)
-
+    
+    genotype_cnvs = subparsers.add_parser("gtcnvs", help="genotype CNVs and write VCF file")
+    genotype_cnvs.add_argument("-i", "--input-file", dest="input_file", help="Input file", required=True)
+    genotype_cnvs.add_argument("-t", "--temp-working-dir", dest="temp_dir", help="Reference file", default="tmp_dir") 
+    genotype_cnvs.add_argument("-d", "--directory", dest="input_directory", help="Input directory", required=True)
+    genotype_cnvs.add_argument("-o", "--output-directory", dest="output_directory", help="Output directory", default="out_dir") 
+    genotype_cnvs.add_argument("-r","--reference-file", dest="reference_file", help="Reference genome", required=True)
+    genotype_cnvs.set_defaults(func=genotype_cnvs_wrap)
     args = parser.parse_args()
     return args
+
+
+def genotype_cnvs_wrap(args):
+    """
+        Genotype CNVs
+    """
+    in_file = input_file.InputFile(args.input_file, args.input_directory)
+    try:
+        os.mkdir(args.temp_dir)
+    except OSError:
+        pass
+    try:
+        os.mkdir(args.output_directory)
+    except OSError:
+        pass
+    reference_file = args.reference_file
+    for sample in in_file:
+        # Have to align 
+        align.align_reads(sample,args.temp_dir, reference_file, skip=True) 
+        input_cnvs = (os.path.join(args.input_directory, sample.samples_name + ".cnv"))
+        cnv_calls.CNVs(input_cnvs, sample.bam_file)
 
 def cnv_call_wrap(args):
     """
