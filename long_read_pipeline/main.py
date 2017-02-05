@@ -93,7 +93,7 @@ def genotype_cnvs_wrap(args):
     reference_file = args.reference_file
     for sample in in_file:
         # Have to align 
-        align.align_reads(sample,args.temp_dir, reference_file, skip=True) 
+        align.align_reads(sample,args.temp_dir, reference_file, skip=True)
         input_cnvs = (os.path.join(args.input_directory, sample.samples_name + ".cnv"))
         cnvs = cnv_calls.CNVs(input_cnvs, sample.bam_file)
         for i in range(len(cnvs)):

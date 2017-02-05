@@ -26,14 +26,6 @@ import logging
 import pysam
 
 
-CIGAR_TUPLES={0:"M"
-        1
-        }
-
-
-"
-
-
 class CNVrow(object):
 
     def __init__(self, chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant_type, unaccounted_for_sequence, event_length, event_id, bam_file):
@@ -58,7 +50,6 @@ class CNVrow(object):
         self._unaccounted_for_sequence = unaccounted_for_sequence 
         self._event_length = event_length
         self._event_id = event_id
-        print(bam_file)
         self._bam_file = pysam.AlignmentFile(bam_file, "rb")
 
     @property
@@ -78,15 +69,47 @@ class CNVrow(object):
     def __str__(self):
         return '\t'.join(map(str, [self.chrom1, self.breakStart1, self.breakEnd1, self.chrom2, self.breakStart2, self.breakEnd2, self.ID, self.score, self.strand1, self.strand2, self.queryStart1, self.queryEnd1, self.queryStart2, self.queryEnd2  , self.minNonOverlap, self.queryLength, self.qualScores, self.variant_type, self.unaccounted_for_sequence, self.event_length,self.chrom1+":"+self.breakEnd1 +"-" +self.breakStart2]))
 
-    def extract_windowed_reads(self, slop): 
+    def _get_left_bp(self, slop, mapping_quality): 
+        """
+            Get the left break point
+        """
+        reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart1 - slop, self.breakStart1 + slop)
+        supporting = 0
+        not_supporting = 0
+        for reads in reads_tmp:
+            if reads.mapping_quality <= mapping_quality or reads.is_duplicate:
+                continue
+            read_split = reads.cigartuples[len(reads.cigartuples)-1]
+            if not (read_split[0] == 4 or read_split[0] == 5):
+                if reads.reference_start > self.breakStart1:
+                    continue
+                if (reads.reference_start + reads.query_length) > (self.breakStart1):
+                    not_supporting +=1
+                continue
+            type_clip = read_split[0]
+            if type_clip == 4:
+                break_point = reads.reference_start  + (reads.query_length - read_split[1])
+            elif type_clip == 5:
+                break_point = reads.reference_start  + (reads.query_length)
+            if break_point == self.breakStart1:
+                supporting +=1
+                #  Check for matches 
+            elif break_point > self.breakStart1: 
+                not_supporting +=1
+
+    def _get_right_bp(self, slop, mapping_quality):
+        """
+            Get the right breakpoint
+        """
+
+        return None
+
+    def extract_windowed_reads(self, slop, mapping_quality=20): 
         """
             Extract windowed reads for both R1 and R2.
         """
-        reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart1 - slop, self.breakStart1 + slop)
-        for reads in reads_tmp:
-            
-            print(reads)
-            print(reads.cigartuples)
+        self._get_left_bp(slop, mapping_quality)
+        self._get_right_bp(slop, mapping_quality)
         return reads_tmp
 
 class CNVs(object):
