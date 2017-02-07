@@ -22,13 +22,14 @@ import argparse
 import os
 import sys
 import logging
-
+import tempfile
 import pysam
 
+from long_read_pipeline.utils import fasta
 
 class CNVrow(object):
 
-    def __init__(self, chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant_type, unaccounted_for_sequence, event_length, event_id, bam_file):
+    def __init__(self, chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant_type, unaccounted_for_sequence, event_length, event_id, bam_file, r1, r2, break_point_folder):
         self._chrom1 = chrom1
         self._breakStart1 = int(breakStart1)
         self._breakEnd1 = int(breakEnd1) 
@@ -51,6 +52,16 @@ class CNVrow(object):
         self._event_length = event_length
         self._event_id = event_id
         self._bam_file = pysam.AlignmentFile(bam_file, "rb")
+        self._fasta_one = r1
+        self._fasta_two = r2
+        self._break_point_folder = break_point_folder 
+
+    @property
+    def read_one(self):
+        return self._r1
+    @property
+    def read_two(self):
+        return self._r2
 
     @property
     def chrom(self):
@@ -76,6 +87,8 @@ class CNVrow(object):
         reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart1 - slop, self.breakStart1 + slop)
         supporting = 0
         not_supporting = 0
+        read_one_list = []
+        read_two_list = []
         for reads in reads_tmp:
             if reads.mapping_quality <= mapping_quality or reads.is_duplicate:
                 continue
@@ -93,9 +106,25 @@ class CNVrow(object):
                 break_point = reads.reference_start  + (reads.query_length)
             if break_point == self.breakStart1:
                 supporting +=1
+                if reads.is_read1:
+                    read_one_list.append(reads.query_name +"/1")
+                    #fasta.extract_reads(self._fasta_one, reads.query_name + "/1")
+                else:
+                    read_two_list.append(reads.query_name +"/2")
+                    #fasta.extract_reads(self._fasta_two, reads.query_name +"/2")
                 #  Check for matches 
             elif break_point > self.breakStart1: 
                 not_supporting +=1
+        temp_out = tempfile.NamedTemporaryFile() 
+        for read_one in read_one_list:
+            temp_out.write(read_one +"\n")
+        fasta.extract_reads(self._fasta_one, temp_out.name) 
+        temp_out.close()
+        temp_out = tempfile.NamedTemporaryFile() 
+        for read_two in read_two_list:
+            temp_out.write(read_two + "\n")
+        fasta.extract_reads(self._fasta_two, temp_out.name) 
+        temp_out.close() 
 
     def _get_right_bp(self, slop, mapping_quality):
         """
@@ -114,7 +143,7 @@ class CNVrow(object):
 
 class CNVs(object):
 
-    def __init__(self, cnv_input_file, bam_file):
+    def __init__(self, cnv_input_file, bam_file,fasta_one,fasta_two, break_point_folder):
         """
             Initialise event IDs.
         """
@@ -129,7 +158,7 @@ class CNVs(object):
                       cnv_input_row_split[8],cnv_input_row_split[9],cnv_input_row_split[10],cnv_input_row_split[11],
                       cnv_input_row_split[12],cnv_input_row_split[13],cnv_input_row_split[14],cnv_input_row_split[15],
                       cnv_input_row_split[16],cnv_input_row_split[17],cnv_input_row_split[18],cnv_input_row_split[19],
-                      cnv_input_row_split[20],bam_file))
+                      cnv_input_row_split[20],bam_file,fasta_one,fasta_two, break_point_folder))
 
     def extract_windowed_bam_reads(self,i, slop=1000):
         temp_reads = self.input_rows[i].extract_windowed_reads(slop) 

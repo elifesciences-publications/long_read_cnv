@@ -24,10 +24,11 @@ import argparse
 import sys
 import logging
 import subprocess
+import shutil
 
 from long_read_pipeline import input_file 
 from long_read_pipeline.speedseq import align
-from long_read_pipeline.utils import scaffold
+from long_read_pipeline.utils import scaffold, fasta
 from long_read_pipeline.pilon import pilon 
 from long_read_pipeline.cnv import cnv, cnv_calls
 
@@ -43,7 +44,6 @@ def setup_log(log_file):
     fileHandler = logging.FileHandler(log_file,mode="w")
     fileHandler.setFormatter(logFormatter)
     rootLogger.addHandler(fileHandler)
-
 
 def parse_args(): 
     parser=argparse.ArgumentParser(description="Causal estimation from summary statistics")
@@ -92,10 +92,13 @@ def genotype_cnvs_wrap(args):
         pass
     reference_file = args.reference_file
     for sample in in_file:
-        # Have to align 
+        # Have to align
+        break_point_folder = os.path.join(args.output_directory,sample.samples_name,"breakpoints")
         align.align_reads(sample,args.temp_dir, reference_file, skip=True)
         input_cnvs = (os.path.join(args.input_directory, sample.samples_name + ".cnv"))
-        cnvs = cnv_calls.CNVs(input_cnvs, sample.bam_file)
+        # Index and create fastas from fastq.
+        fasta.index_fasta(sample, args.temp_dir)
+        cnvs = cnv_calls.CNVs(input_cnvs, sample.bam_file, sample.fasta_one, sample.fasta_two, break_point_folder)
         for i in range(len(cnvs)):
             cnvs.extract_windowed_bam_reads(i)
 
@@ -139,7 +142,10 @@ def pilon_align_wrap(args):
         os.rename(bwa_output, os.path.join(args.output_directory, os.path.basename(bwa_output)))
         os.rename(bwa_output +".bai", os.path.join(args.output_directory, os.path.basename(bwa_output) +".bai"))
         os.rename(sample.pilon_fasta,os.path.join(args.output_directory, os.path.basename(sample.pilon_fasta) ))
-        samtools_faidx = " samtools faidx {0}".format(os.path.join(args.output_directory, os.path.basename(sample.pilon_fasta) ))
+        for pairs in sample.paired_end_list:
+            shutil.copy(pairs[0], os.path.join(args.output_directory, os.path.basename(pairs[0])))
+            shutil.copy(pairs[1], os.path.join(args.output_directory, os.path.basename(pairs[1])))
+        samtools_faidx = " samtools faidx {0}".format(os.path.join(args.output_directory, os.path.basename(sample.pilon_fasta)))
         subprocess.check_call(samtools_faidx, shell=True)
     # Then align the reads to reference genome.  
     #speedseq_align = speeqseq.speedseq_align(in_file)

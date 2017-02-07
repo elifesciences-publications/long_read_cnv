@@ -15,9 +15,11 @@ long_read_pipeline/speedseq/__init__.py
 long_read_pipeline/speedseq/align.py
 long_read_pipeline/utils/__init__.py
 long_read_pipeline/utils/bam.py
+long_read_pipeline/utils/fasta.py
+long_read_pipeline/utils/gt_likelihoods.py
 long_read_pipeline/utils/scaffold.py
 long_read_pipeline/utils/shell.py
-long_read_pipeline/utils/subprocess.py
+long_read_pipeline/utils/sp_utils.py
 long_read_pipeline/utils/vcf.py
 long_read_pipeline/utils/waterman.py
 lrcnv.egg-info/PKG-INFO

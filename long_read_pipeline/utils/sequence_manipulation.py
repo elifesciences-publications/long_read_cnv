@@ -18,21 +18,17 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-class InputFile(object):
-    """
-        Sample input file.  
+def rev_complement(sequence):
+    sequence_updated = []
+    for char in sequence:
+        if char == "G":
+            sequence_updated.append("C")
+        elif char == "C":
+            sequence_updated.append("G")
+        elif char == "A":
+            sequence_updated.append("T")
+        elif char == "T":
+            sequence_updated.append("C")
+    return "".join(sequence_updated[::-1])
 
-    """
 
-    def __init__(self, input_file):
-        """
-            Initialise input files. 
-        """
-        with open(input_file) as in_file:
-            for i, line in enumerate(in_file):
-                if i == 0:
-                    header_s = line.split()
-                    print(header_s)
-                    print(i)
-                else:
-                    print(i)

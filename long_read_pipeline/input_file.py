@@ -59,6 +59,16 @@ class InputRow(object):
         """
         self._pilon_fasta = fasta_file
 
+    def set_paired_fastas(self, fasta_one, fasta_two):
+        self._fasta_one = fasta_one
+        self._fasta_two = fasta_two 
+    @property
+    def fasta_one(self):
+        return self._fasta_one
+    @property
+    def fasta_two(self):
+        return self._fasta_two
+
     @property 
     def pilon_fasta(self):
         return self._pilon_fasta
