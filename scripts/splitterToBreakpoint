@@ -35,7 +35,7 @@ class CNVOutput(object):
         return '\t'.join(map(str, [self.chrom1, self.breakStart1, self.breakEnd1, self.chrom2, self.breakStart2, self.breakEnd2, self.ID, self.score, self.strand1, self.strand2, self.queryStart1, self.queryEnd1, self.queryStart2, self.queryEnd2  , self.minNonOverlap, self.queryLength, self.qualScores, self.variant_type, self.unaccounted_for_sequence, self.event_length,self.chrom1+":"+self.breakEnd1 +"-" +self.breakStart2]))
 
 
-def _extract_breakpoints(region, output_prefix, slop=50, fasta_input_file="/Users/smilefreak/Programming/OpenSource/MyGitHub/long_read_pipeline/scripts/test/RM_scaffolds.fasta"):
+def _extract_breakpoints(region, output_prefix, slop=300, fasta_input_file="/Users/smilefreak/Programming/OpenSource/MyGitHub/long_read_pipeline/scripts/test/RM_scaffolds.fasta"):
     """
         Extract the breakpoint sequence.
     """
@@ -62,50 +62,50 @@ def _extract_breakpoints(region, output_prefix, slop=50, fasta_input_file="/User
                     # We must have duplication situation, so just extract the sequence
                     # Could be no insertion.
                     if "duplication" in region.variant_type: 
-                        h1 = "_" +region.chrom1 +":"+str(int(region.breakStart2)-50 + 1 ) +"-" + str(int(region.breakStart2)+50) + "_strand_" + region.strand1 
-                        h2 = "_" + region.chrom1+":"+str(int(region.breakStart1)-50 + 1) +"-" + str(int(region.breakStart1)+50) + "_strand_" + region.strand1 
+                        h1 = "_" +region.chrom1 +":"+str(int(region.breakStart2)-slop + 1 ) +"-" + str(int(region.breakStart2)+slop) + "_strand_" + region.strand1 
+                        h2 = "_" + region.chrom1+":"+str(int(region.breakStart1)-slop + 1) +"-" + str(int(region.breakStart1)+slop) + "_strand_" + region.strand1 
                     else: 
-                        h1 = "_" +region.chrom1 +":"+str(int(region.breakStart1)-50 + 1 ) +"-" + str(int(region.breakStart1)+50) + "_strand_" + region.strand1 
-                        h2 = "_" + region.chrom1+":"+str(int(region.breakStart2)-50 + 1) +"-" + str(int(region.breakStart2)+50) + "_strand_" + region.strand1 
-                    seq1 = seq_fastq[(int(start_read)-50):(int(start_read)+50)]
-                    seq2 = seq_fastq[(int(end_read)-50):(int(end_read)+50)]
+                        h1 = "_" +region.chrom1 +":"+str(int(region.breakStart1)-slop+ 1 ) +"-" + str(int(region.breakStart1)+slop) + "_strand_" + region.strand1 
+                        h2 = "_" + region.chrom1+":"+str(int(region.breakStart2)-slop+ 1) +"-" + str(int(region.breakStart2)+slop) + "_strand_" + region.strand1 
+                    seq1 = seq_fastq[(int(start_read)-slop):(int(start_read)+slop)]
+                    seq2 = seq_fastq[(int(end_read)-slop):(int(end_read)+slop)]
                     #print(seq)
                     if region.strand1 == "-":
-                        seq1 = seq_fastq[(int(start_read)-50):(int(start_read)+50)]
-                        seq2 = seq_fastq[(int(end_read)-50):(int(end_read)+50)]
+                        seq1 = seq_fastq[(int(start_read)-slop):(int(start_read)+slop)]
+                        seq2 = seq_fastq[(int(end_read)-slop):(int(end_read)+slop)]
                         seq1 = complement(seq1)
                         seq2 = complement(seq2)
                 #print(seq)
                 #print(seq)bww
                 elif end_read <= start_read:
                     if "duplication" in region.variant_type: 
-                        h2 = "_" +region.chrom1 +":"+str(int(region.breakStart2)-50 + 1 ) +"-" + str(int(region.breakStart2)+50) + "_strand_" + region.strand1 
-                        h1 = "_" + region.chrom1+":"+str(int(region.breakStart1)-50 + 1) +"-" + str(int(region.breakStart1)+50) + "_strand_" + region.strand1 
+                        h2 = "_" +region.chrom1 +":"+str(int(region.breakStart2)-slop+ 1 ) +"-" + str(int(region.breakStart2)+slop) + "_strand_" + region.strand1 
+                        h1 = "_" + region.chrom1+":"+str(int(region.breakStart1)-slop+ 1) +"-" + str(int(region.breakStart1)+slop) + "_strand_" + region.strand1 
                     else: 
-                        h1= "_" +region.chrom1 +":"+str(int(region.breakStart1)-50 + 1 ) +"-" + str(int(region.breakStart1)+50) + "_strand_" + region.strand1 
-                        h2 = "_" + region.chrom1+":"+str(int(region.breakStart2)-50 + 1) +"-" + str(int(region.breakStart2)+50) + "_strand_" + region.strand1 
-                    seq2= seq_fastq[(int(end_read)-50):(int(end_read)+50)]
-                    seq1 = seq_fastq[(int(start_read)-50):(int(start_read)+50)]
+                        h1= "_" +region.chrom1 +":"+str(int(region.breakStart1)-slop + 1 ) +"-" + str(int(region.breakStart1)+slop) + "_strand_" + region.strand1 
+                        h2 = "_" + region.chrom1+":"+str(int(region.breakStart2)-slop + 1) +"-" + str(int(region.breakStart2)+slop) + "_strand_" + region.strand1 
+                    seq2= seq_fastq[(int(end_read)-slop):(int(end_read)+slop)]
+                    seq1 = seq_fastq[(int(start_read)-slop):(int(start_read)+slop)]
                     #print(seq)
                     if region.strand1 == "-":
-                        seq2= seq_fastq[(int(end_read)-50):(int(end_read)+50)]
-                        seq1 = seq_fastq[(int(start_read)-50):(int(start_read)+50)]
+                        seq2= seq_fastq[(int(end_read)-slop):(int(end_read)+slop)]
+                        seq1 = seq_fastq[(int(start_read)-slop):(int(start_read)+slop)]
                         seq1 = complement(seq1)
                         seq2 = complement(seq2)
                    #print(seq)
                 # deal with inversions next
                 brk1_f.write(header + h1 +"\n"+ seq1 + "\n") 
                 brk2_f.write(header + h2 +"\n"+ seq2 + "\n") 
-                brk1_f.write(header + h1 +"\n"+ seq1[:50] + "\n") 
-                brk2_f.write(header + h2 +"\n"+ seq2[:50] + "\n") 
-                brk1_f.write(header + h1 +"\n"+ seq1[50:] + "\n") 
-                brk2_f.write(header + h2 +"\n"+ seq2[50:]+ "\n") 
+                brk1_f.write(header + h1 +"\n"+ seq1[:slop] + "\n") 
+                brk2_f.write(header + h2 +"\n"+ seq2[:slop] + "\n") 
+                brk1_f.write(header + h1 +"\n"+ seq1[slop:] + "\n") 
+                brk2_f.write(header + h2 +"\n"+ seq2[slop:]+ "\n") 
             elif region.strand1 != region.strand2:
                 start_read = region.queryEnd1
                 end_read = region.queryStart2
                 if end_read > start_read:
-                    h1 = "_" +region.chrom1 +":"+str(int(region.breakStart1)-50 + 1) +"-" + str(int(region.breakStart1)+50) + "_strand1_" + region.strand1 +"_strand2_"+ region.strand2
-                    h2 = "_" +region.chrom1 +":"+str(int(region.breakStart2)-50 + 1) +"-" + str(int(region.breakStart2)+50) + "_strand1_" + region.strand1 +"_strand2_"+ region.strand2
+                    h1 = "_" +region.chrom1 +":"+str(int(region.breakStart1)-slop+ 1) +"-" + str(int(region.breakStart1)+slop) + "_strand1_" + region.strand1 +"_strand2_"+ region.strand2
+                    h2 = "_" +region.chrom1 +":"+str(int(region.breakStart2)-slop+ 1) +"-" + str(int(region.breakStart2)+slop) + "_strand1_" + region.strand1 +"_strand2_"+ region.strand2
                 else:
                     pass
 

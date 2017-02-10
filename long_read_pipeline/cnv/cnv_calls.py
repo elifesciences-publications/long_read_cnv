@@ -26,6 +26,8 @@ import tempfile
 import pysam
 
 from long_read_pipeline.utils import fasta
+from long_read_pipeline.utils import waterman
+from long_read_pipeline.utils import gt_likelihoods
 
 class CNVrow(object):
 
@@ -80,6 +82,12 @@ class CNVrow(object):
     def __str__(self):
         return '\t'.join(map(str, [self.chrom1, self.breakStart1, self.breakEnd1, self.chrom2, self.breakStart2, self.breakEnd2, self.ID, self.score, self.strand1, self.strand2, self.queryStart1, self.queryEnd1, self.queryStart2, self.queryEnd2  , self.minNonOverlap, self.queryLength, self.qualScores, self.variant_type, self.unaccounted_for_sequence, self.event_length,self.chrom1+":"+self.breakEnd1 +"-" +self.breakStart2]))
 
+    def _prob_mapq(self, mapq):
+        """
+            Probability that a read maps
+        """
+        return 1 - 10**(-mapq/10)
+
     def _get_left_bp(self, slop, mapping_quality): 
         """
             Get the left break point
@@ -89,11 +97,187 @@ class CNVrow(object):
         not_supporting = 0
         read_one_list = []
         read_two_list = []
+        read_one_complement =[]
+        read_two_complement =[]
+        read_pos_r1 = []
+        read_pos_r2 = []
+        read1_pos_mapq=[]
+        read2_pos_mapq=[]
         for reads in reads_tmp:
             if reads.mapping_quality <= mapping_quality or reads.is_duplicate:
                 continue
             read_split = reads.cigartuples[len(reads.cigartuples)-1]
             if not (read_split[0] == 4 or read_split[0] == 5):
+                if reads.reference_start > self.breakStart1:
+                    continue
+                if (reads.reference_start + reads.query_length) > (self.breakStart1):
+                    not_supporting += self._prob_mapq(reads.mapping_quality)
+                continue
+            type_clip = read_split[0]
+            if type_clip == 4:
+                break_point = reads.reference_start  + (reads.query_length - read_split[1])
+            elif type_clip == 5:
+                break_point = reads.reference_start  + (reads.query_length)
+            if break_point == self.breakStart1:
+                if reads.is_read1:
+                    read_one_list.append(reads.query_name +"/1")
+                    read_one_complement.append(reads.is_reverse)
+                    read_pos_r1.append(reads.reference_start) 
+                    read1_pos_mapq.append(reads.mapping_quality)
+                    #fasta.extract_reads(self._fasta_one, reads.query_name + "/1")
+                else:
+                    read_two_list.append(reads.query_name +"/2")
+                    read_two_complement.append(reads.is_reverse)
+                    read_pos_r2.append(reads.reference_start) 
+                    read2_pos_mapq.append(reads.mapping_quality)
+                    #fasta.extract_reads(self._fasta_two, reads.query_name +"/2")
+                #  Check for matches 
+            elif break_point > self.breakStart1: 
+                not_supporting += self._prob_mapq(reads.mapping_quality)
+        temp_out = tempfile.NamedTemporaryFile(delete=False) 
+        for read_one in read_one_list:
+            temp_out.write(read_one +"\n")
+        temp_out.close()
+        tmp_fasta1 = fasta.extract_reads(self._fasta_one, temp_out.name) 
+        os.remove(temp_out.name)
+        temp_out = tempfile.NamedTemporaryFile(delete=False) 
+        for read_two in read_two_list:
+            temp_out.write(read_two + "\n")
+        temp_out.close()
+        tmp_fasta2 = fasta.extract_reads(self._fasta_two, temp_out.name) 
+        os.remove(temp_out.name)
+        fasta_check = fasta.FastaInput(tmp_fasta1, tmp_fasta2, read_one_complement, read_two_complement, read_pos_r1, read_pos_r2,read1_pos_mapq, read2_pos_mapq)
+        with open(os.path.join(self._break_point_folder, self._event_id + "_" + self._variant_type + ".brk1.fasta")) as break_in:
+        #with open(self._break_point_folder 
+            break_in.readline()
+            seq_break = break_in.readline().strip()
+            for read_id, item in fasta_check.sequences.items():
+                pos_in_brk1 = (item[1] - (self.breakStart1 -300))
+                tmp_seq_brk = (seq_break[pos_in_brk1:])
+                tmp_seq_read = item[0][:len(tmp_seq_brk)]
+                tmp_seq_brk = tmp_seq_brk[:len(tmp_seq_read)]
+                identity = waterman.water(tmp_seq_brk, tmp_seq_read)
+                if identity > 0.99:
+                    supporting += self._prob_mapq(item[2])
+                else:
+                    not_supporting += self._prob_mapq(item[2])
+            #print(read_id)
+        gt_likelihoods.genotype_likelihoods(not_supporting, supporting)
+        return supporting, not_supporting
+    
+    def _get_right_bp(self, slop, mapping_quality):
+        """
+            Get the right breakpoint 
+        """
+        reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart1 - slop, self.breakStart1 + slop)
+        supporting = 0
+        not_supporting = 0
+        read_one_list = []
+        read_two_list = []
+        read_one_complement =[]
+        read_two_complement =[]
+        read_pos_r1 = []
+        read_pos_r2 = []
+        read1_pos_mapq=[]
+        read2_pos_mapq=[]
+        reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart2 - slop, self.breakStart2 + slop)
+        for reads in reads_tmp:
+            if reads.mapping_quality <= mapping_quality or reads.is_duplicate:
+                continue
+            read_split = reads.cigartuples[0]
+            if not (read_split[0] == 4 or read_split[0] == 5):
+                # Ensure end is not working
+                if reads.reference_start > self.breakStart1:
+                    continue
+                if (reads.reference_start < self.breakStart2) and (reads.reference_start + reads.query_length) > (self.breakStart2):
+                    not_supporting +=1
+                continue
+            type_clip = read_split[0]
+            if type_clip == 4:
+                #print(reads)
+                #print(read_split)
+                break_point = reads.reference_start 
+            elif type_clip == 5:
+                #print(reads)
+                #print(read_split)
+                break_point = reads.reference_start 
+            if break_point == self._breakEnd2:
+                if reads.is_read1:
+                    read_one_list.append(reads.query_name +"/1")
+                    read_one_complement.append(reads.is_reverse)
+                    read_pos_r1.append(reads.reference_start - read_split[1])
+                    #print("HERE")
+                    #print(reads.reference_start - read_split[1])
+                    read1_pos_mapq.append(reads.mapping_quality)
+                    #fasta.extract_reads(self._fasta_one, reads.query_name + "/1")
+                else:
+                    read_two_list.append(reads.query_name +"/2")
+                    read_two_complement.append(reads.is_reverse)
+                    read_pos_r2.append(reads.reference_start - read_split[1]) 
+                    read2_pos_mapq.append(reads.mapping_quality)
+                    #print(reads.reference_start - read_split[1])
+                    #fasta.extract_reads(self._fasta_two, reads.query_name +"/2")
+                #  Check for matches 
+            elif break_point != self.breakStart1: 
+                not_supporting +=1
+        temp_out = tempfile.NamedTemporaryFile(delete=False) 
+        for read_one in read_one_list:
+            temp_out.write(read_one +"\n")
+        temp_out.close()
+        tmp_fasta1 = fasta.extract_reads(self._fasta_one, temp_out.name) 
+        os.remove(temp_out.name)
+        temp_out = tempfile.NamedTemporaryFile(delete=False) 
+        for read_two in read_two_list:
+            temp_out.write(read_two + "\n")
+        temp_out.close()
+        print(temp_out.name)
+        tmp_fasta2 = fasta.extract_reads(self._fasta_two, temp_out.name) 
+        #os.remove(temp_out.name)
+        fasta_check = fasta.FastaInput(tmp_fasta1, tmp_fasta2, read_one_complement, read_two_complement, read_pos_r1, read_pos_r2,read1_pos_mapq, read2_pos_mapq)
+        with open(os.path.join(self._break_point_folder, self._event_id + "_" + self._variant_type + ".brk2.fasta")) as break_in:
+        #with open(self._break_point_folder 
+            break_in.readline()
+            seq_break = break_in.readline().strip()
+            for read_id, item in fasta_check.sequences.items():
+                print(item)
+                pos_in_brk1 = (item[1] - (self._breakEnd2 -300))
+                tmp_seq_brk = (seq_break[pos_in_brk1:])
+                tmp_seq_read = item[0][:len(tmp_seq_brk)]
+                print(read_id)
+                print(tmp_seq_read)
+                tmp_seq_brk = tmp_seq_brk[:len(tmp_seq_read)]
+                print(tmp_seq_brk)
+                identity = waterman.water(tmp_seq_brk, tmp_seq_read)
+                print(identity)
+                if identity > 0.99:
+                    supporting +=1
+                else:
+                    not_supporting +=1
+        print(supporting, not_supporting)
+        return supporting, not_supporting
+
+    def _get_left_bp(self, slop, mapping_quality):
+        """
+            Get the self breakpoint
+        """
+        reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart1 - slop, self.breakStart1 + slop)
+        supporting = 0
+        not_supporting = 0
+        read_one_list = []
+        read_two_list = []
+        read_one_complement =[]
+        read_two_complement =[]
+        read_pos_r1 = []
+        read_pos_r2 = []
+        read1_pos_mapq=[]
+        read2_pos_mapq=[]
+        # Left BP
+        for reads in reads_tmp:
+            if reads.mapping_quality <= mapping_quality or reads.is_duplicate:
+                continue
+            read_split = reads.cigartuples[len(reads.cigartuples)-1]
+            if not (read_split[0] == 4 or read_split[0] == 5):
+                # Ensure end is not working
                 if reads.reference_start > self.breakStart1:
                     continue
                 if (reads.reference_start + reads.query_length) > (self.breakStart1):
@@ -105,40 +289,59 @@ class CNVrow(object):
             elif type_clip == 5:
                 break_point = reads.reference_start  + (reads.query_length)
             if break_point == self.breakStart1:
-                supporting +=1
                 if reads.is_read1:
                     read_one_list.append(reads.query_name +"/1")
+                    read_one_complement.append(reads.is_reverse)
+                    read_pos_r1.append(reads.reference_start) 
+                    read1_pos_mapq.append(reads.mapping_quality)
                     #fasta.extract_reads(self._fasta_one, reads.query_name + "/1")
                 else:
                     read_two_list.append(reads.query_name +"/2")
+                    read_two_complement.append(reads.is_reverse)
+                    read_pos_r2.append(reads.reference_start) 
+                    read2_pos_mapq.append(reads.mapping_quality)
                     #fasta.extract_reads(self._fasta_two, reads.query_name +"/2")
                 #  Check for matches 
             elif break_point > self.breakStart1: 
-                not_supporting +=1
-        temp_out = tempfile.NamedTemporaryFile() 
+                not_supporting += 1 
+            elif break_point < self.breakStart1:
+                not_supporting += 1 
+        temp_out = tempfile.NamedTemporaryFile(delete=False) 
         for read_one in read_one_list:
             temp_out.write(read_one +"\n")
-        fasta.extract_reads(self._fasta_one, temp_out.name) 
         temp_out.close()
-        temp_out = tempfile.NamedTemporaryFile() 
+        tmp_fasta1 = fasta.extract_reads(self._fasta_one, temp_out.name) 
+        os.remove(temp_out.name)
+        temp_out = tempfile.NamedTemporaryFile(delete=False) 
         for read_two in read_two_list:
             temp_out.write(read_two + "\n")
-        fasta.extract_reads(self._fasta_two, temp_out.name) 
-        temp_out.close() 
-
-    def _get_right_bp(self, slop, mapping_quality):
-        """
-            Get the right breakpoint
-        """
-
-        return None
+        temp_out.close()
+        tmp_fasta2 = fasta.extract_reads(self._fasta_two, temp_out.name) 
+        os.remove(temp_out.name)
+        fasta_check = fasta.FastaInput(tmp_fasta1, tmp_fasta2, read_one_complement, read_two_complement, read_pos_r1, read_pos_r2,read1_pos_mapq, read2_pos_mapq)
+        with open(os.path.join(self._break_point_folder, self._event_id + "_" + self._variant_type + ".brk1.fasta")) as break_in:
+        #with open(self._break_point_folder 
+            break_in.readline()
+            seq_break = break_in.readline().strip()
+            for read_id, item in fasta_check.sequences.items():
+                pos_in_brk1 = (item[1] - (self.breakStart1 -300))
+                tmp_seq_brk = (seq_break[pos_in_brk1:])
+                tmp_seq_read = item[0][:len(tmp_seq_brk)]
+                tmp_seq_brk = tmp_seq_brk[:len(tmp_seq_read)]
+                identity = waterman.water(tmp_seq_brk, tmp_seq_read)
+                if identity > 0.99:
+                    supporting +=1
+                else:
+                    not_supporting +=1
+        return (supporting, not_supporting)
 
     def extract_windowed_reads(self, slop, mapping_quality=20): 
         """
             Extract windowed reads for both R1 and R2.
         """
-        self._get_left_bp(slop, mapping_quality)
-        self._get_right_bp(slop, mapping_quality)
+
+        #left_support, left_no_support = self._get_left_bp(slop, mapping_quality)
+        right_support, right_no_support = self._get_right_bp(slop, mapping_quality)
         return reads_tmp
 
 class CNVs(object):
@@ -160,7 +363,7 @@ class CNVs(object):
                       cnv_input_row_split[16],cnv_input_row_split[17],cnv_input_row_split[18],cnv_input_row_split[19],
                       cnv_input_row_split[20],bam_file,fasta_one,fasta_two, break_point_folder))
 
-    def extract_windowed_bam_reads(self,i, slop=1000):
+    def extract_windowed_bam_reads(self,i, slop=200):
         temp_reads = self.input_rows[i].extract_windowed_reads(slop) 
 
     def __len__(self):

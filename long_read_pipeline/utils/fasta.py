@@ -22,8 +22,9 @@ import os
 import argparse
 import sys
 import subprocess
+from long_read_pipeline.utils import sequence_manipulation
 
-def FastaInput(object):
+class FastaInput(object):
     """
         FastaInput
 
@@ -31,9 +32,34 @@ def FastaInput(object):
 
         Only does two line fasta to begin with
     """
-    def __init__(self,fasta_input_file):
-        with open(fasta_input_file):
-
+    def __init__(self,r1_input_string, r2_input_string, complement_r1, complement_r2, pos_r1, pos_r2, read1_pos_mapq, read2_pos_mapq):
+        self.sequences = {}
+        j = 0 
+        for i, line in enumerate(r1_input_string.split("\n")):
+            if i % 2 == 0:
+                if line.strip() == "":
+                    break
+                get_id = line.strip().split(">")[1]
+            else:
+                seq = line.strip()
+                if complement_r1[j]:
+                    self.sequences[get_id] = (sequence_manipulation.rev_complement(seq), pos_r1[j], read1_pos_mapq[j])
+                else:
+                    self.sequences[get_id] = (seq, pos_r1[j], read1_pos_mapq[j]) 
+                j += 1
+        j = 0 
+        for i, line in enumerate(r2_input_string.split("\n")):
+            if i % 2 == 0:
+                if line.strip() == "":
+                    break
+                get_id = line.strip().split(">")[1]
+            else:
+                seq = line.strip()
+                if complement_r2[j]:
+                    self.sequences[get_id] = (sequence_manipulation.rev_complement(seq), pos_r2[j],read2_pos_mapq[j]) 
+                else:
+                    self.sequences[get_id] = (seq, pos_r2[j],read2_pos_mapq[j])
+                j+=1 
 
 
 def index_fasta(input_file, temp_dir):
@@ -91,4 +117,5 @@ def extract_reads(fasta_input, temp_read_list_file):
     cdx_input = fasta_input+ ".cidx" 
     cdbyank = "cdbyank {0} < {1}"
     yank_command = cdbyank.format(cdx_input, temp_read_list_file)
-    subprocess.check_call(yank_command, shell=True)
+    fasta = subprocess.check_output(yank_command, shell=True)
+    return fasta 

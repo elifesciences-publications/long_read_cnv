@@ -28,7 +28,6 @@ class InputRow(object):
         Input row.
     """
 
-
     def _split_paired_ends(self):
         """
             Split paired ends 
