@@ -41,7 +41,7 @@ def _log_choose(n,k):
     return r
 
 
-def genotype_likelihoods(not_supporting, supporting):
+def genotype_likelihoods(supporting,  not_supporting):
     """
         Get the likelihoods for the reads using counts of alternate and non-alternate bases.
 
@@ -67,19 +67,12 @@ def genotype_likelihoods(not_supporting, supporting):
             gt_sum = 10**gt
     if gt_sum > 0:
         gt_sum_log = math.log(gt_sum, 10)
-        sample_qual = abs(-10 * (gt_list[0] - gt_sum_log))
-        if sample_qual > 200:
-            sample_qual = 200
-        print(10**gt_list[gt_idx] / 10**gt_sum_log)
-        if 1 - (10**gt_list[gt_idx] / 10**gt_sum_log) == 0:
-            phred_gq = 200
-        else:
-            phred_gq = abs(-10 * math.log(1 - (10**gt_list[gt_idx] / 10**gt_sum_log), 10))
-        print(phred_gq)
-        print(sample_qual)
+        GQ= abs(-10 * (gt_list[0] - gt_sum_log))
+        if GQ > 200:
+            GQ = 200
         if lp_alt > lp_ref:
             # Must be alternate
-            print("GT = 1")
+            GT = 1
         else:
-            print("GT = 0")
-
+            GT = 0
+        return(GQ, GT)

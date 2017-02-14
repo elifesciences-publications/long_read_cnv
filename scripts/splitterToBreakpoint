@@ -67,12 +67,24 @@ def _extract_breakpoints(region, output_prefix, slop=300, fasta_input_file="/Use
                     else: 
                         h1 = "_" +region.chrom1 +":"+str(int(region.breakStart1)-slop+ 1 ) +"-" + str(int(region.breakStart1)+slop) + "_strand_" + region.strand1 
                         h2 = "_" + region.chrom1+":"+str(int(region.breakStart2)-slop+ 1) +"-" + str(int(region.breakStart2)+slop) + "_strand_" + region.strand1 
-                    seq1 = seq_fastq[(int(start_read)-slop):(int(start_read)+slop)]
-                    seq2 = seq_fastq[(int(end_read)-slop):(int(end_read)+slop)]
+                    if int(end_read) - slop < 0:
+                        end_idx = 0 
+                        end_slop = slop - (slop - int(end_read)) 
+                    else:
+                        end_idx = int(end_read) - slop
+                        end_slop = slop
+                    if int(start_read) - slop < 0:
+                        start_idx = 0 
+                        start_slop = slop - (slop - int(start_read))
+                    else:
+                        start_idx = int(start_read) - slop
+                        start_slop = slop
+                    seq1 = seq_fastq[(start_idx):(int(start_read)+slop)]
+                    seq2 = seq_fastq[(end_idx):(int(end_read)+slop)]
                     #print(seq)
                     if region.strand1 == "-":
-                        seq1 = seq_fastq[(int(start_read)-slop):(int(start_read)+slop)]
-                        seq2 = seq_fastq[(int(end_read)-slop):(int(end_read)+slop)]
+                        seq1 = seq_fastq[(start_idx):(int(start_read)+slop)]
+                        seq2 = seq_fastq[(end_idx):(int(end_read)+slop)]
                         seq1 = complement(seq1)
                         seq2 = complement(seq2)
                 #print(seq)
@@ -84,22 +96,34 @@ def _extract_breakpoints(region, output_prefix, slop=300, fasta_input_file="/Use
                     else: 
                         h1= "_" +region.chrom1 +":"+str(int(region.breakStart1)-slop + 1 ) +"-" + str(int(region.breakStart1)+slop) + "_strand_" + region.strand1 
                         h2 = "_" + region.chrom1+":"+str(int(region.breakStart2)-slop + 1) +"-" + str(int(region.breakStart2)+slop) + "_strand_" + region.strand1 
-                    seq2= seq_fastq[(int(end_read)-slop):(int(end_read)+slop)]
-                    seq1 = seq_fastq[(int(start_read)-slop):(int(start_read)+slop)]
+                    if int(end_read) - slop < 0:
+                        end_idx = 0 
+                        end_slop = slop - (slop - int(end_read)) 
+                    else:
+                        end_idx = int(end_read) - slop
+                        end_slop = slop
+                    if int(start_read) - slop < 0:
+                        start_idx = 0 
+                        start_slop = slop - (slop - int(start_read))
+                    else:
+                        start_idx = int(start_read) - slop
+                        start_slop = slop
+                    seq2 = seq_fastq[(end_idx):(int(end_read)+slop)]
+                    seq1 = seq_fastq[(start_idx):(int(start_read)+slop)]
                     #print(seq)
                     if region.strand1 == "-":
-                        seq2= seq_fastq[(int(end_read)-slop):(int(end_read)+slop)]
-                        seq1 = seq_fastq[(int(start_read)-slop):(int(start_read)+slop)]
+                        seq2= seq_fastq[(end_idx):(int(end_idx)+slop)]
+                        seq1 = seq_fastq[(start_idx):(int(start_read)+slop)]
                         seq1 = complement(seq1)
                         seq2 = complement(seq2)
                    #print(seq)
                 # deal with inversions next
                 brk1_f.write(header + h1 +"\n"+ seq1 + "\n") 
                 brk2_f.write(header + h2 +"\n"+ seq2 + "\n") 
-                brk1_f.write(header + h1 +"\n"+ seq1[:slop] + "\n") 
-                brk2_f.write(header + h2 +"\n"+ seq2[:slop] + "\n") 
-                brk1_f.write(header + h1 +"\n"+ seq1[slop:] + "\n") 
-                brk2_f.write(header + h2 +"\n"+ seq2[slop:]+ "\n") 
+                brk1_f.write(header + h1 +"\n"+ seq1[:start_slop] + "\n") 
+                brk2_f.write(header + h2 +"\n"+ seq2[:end_slop] + "\n") 
+                brk1_f.write(header + h1 +"\n"+ seq1[start_slop:] + "\n") 
+                brk2_f.write(header + h2 +"\n"+ seq2[end_slop:]+ "\n") 
             elif region.strand1 != region.strand2:
                 start_read = region.queryEnd1
                 end_read = region.queryStart2
@@ -118,7 +142,7 @@ def complement(sequence):
             sequence_updated.append("G")
         elif char == "A":
             sequence_updated.append("T")
-        else:
+        elif char =="T":
             sequence_updated.append("A")
     return "".join(sequence_updated[::-1])
 
@@ -132,12 +156,10 @@ def processFasta(region, output_prefix, fasta_input_file="/Users/smilefreak/Prog
     dirname = os.path.dirname(output_prefix)
     base_name_file = os.path.basename(fasta_input_file).split(".")[0]
     dirname = os.path.join(dirname, base_name_file)
-    print(dirname)
     try:
         os.makedirs(os.path.join(dirname,"event_fastas"))
     except OSError:
         pass
-    print(os.path.join(dirname, "event_fastas"))
     with open(os.path.join(dirname,"event_fastas",region.event_id + ".fasta"), "w") as out_f:
         header = ">" + region.event_id  +"\n"
         seq = ""
@@ -335,12 +357,12 @@ def splitterToBreakpoint(contigFile,splitReadSlop,localRange, reference_genome, 
             if(strand1 == "+"):
                 breakStart1 = str(start2-splitReadSlop)
                 breakEnd1 = str(start2+1+splitReadSlop)
-                breakStart2 = str(end1-1-splitReadSlop)
-                breakEnd2 = str(end1+splitReadSlop)
+                breakStart2 = str(end1-splitReadSlop)
+                breakEnd2 = str(end1+1+splitReadSlop)
             else:
                 breakStart1 = str(start1-splitReadSlop)
                 breakEnd1 = str(start1+1+splitReadSlop)
-                breakStart2 = str(end2-1-splitReadSlop)
+                breakStart2 = str(end2-splitReadSlop)
                 breakEnd2 = str(end2+1+splitReadSlop)
         else:
             print "ERROR: " + ID + " is lost in breakpoint locus prediction step. Contact Mitchell"

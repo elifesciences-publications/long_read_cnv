@@ -54,8 +54,7 @@ def finalize(align1, align2):
     
     identity = float(identity) / len(align1)
     # Proportion of max score. 
-    print(len(align1))
-    return identity 
+    return score 
 
 def water(seq1, seq2):
     m, n = len(seq1), len(seq2)  # length of two sequences
@@ -105,4 +104,9 @@ def water(seq1, seq2):
             align2 += '-'
             i -= 1
 
-    return finalize(align1, align2)
+    score = finalize(align1, align2)
+
+    # Score re-run.
+    score_percent = (score) / (len(align1)*10.0)
+    
+    return score_percent

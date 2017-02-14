@@ -1,0 +1,1 @@
+chrom1	breakstart1	breakend1	chrom2	breakstart2	breakend2	ID	score	strand1	strand2	querystart1	queryend1	querystart2	queryend2	minnonoverlap	querylength	qualscores	variant_type	unaccount_for_sequence	event_length	event_id

@@ -100,7 +100,9 @@ def genotype_cnvs_wrap(args):
         fasta.index_fasta(sample, args.temp_dir)
         cnvs = cnv_calls.CNVs(input_cnvs, sample.bam_file, sample.fasta_one, sample.fasta_two, break_point_folder)
         for i in range(len(cnvs)):
-            cnvs.extract_windowed_bam_reads(i)
+            if cnvs.input_rows[i]._chrom1 != "chrM":
+                cnvs.extract_windowed_bam_reads(i)
+
 
 def cnv_call_wrap(args):
     """

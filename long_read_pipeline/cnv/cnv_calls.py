@@ -29,6 +29,8 @@ from long_read_pipeline.utils import fasta
 from long_read_pipeline.utils import waterman
 from long_read_pipeline.utils import gt_likelihoods
 
+
+
 class CNVrow(object):
 
     def __init__(self, chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant_type, unaccounted_for_sequence, event_length, event_id, bam_file, r1, r2, break_point_folder):
@@ -88,11 +90,24 @@ class CNVrow(object):
         """
         return 1 - 10**(-mapq/10)
 
-    def _get_left_bp(self, slop, mapping_quality): 
+    def _filt_reads(self, mapping_quality, mapped_bases, clip_size):
+        """
+            Filter reads.
+
+            @author James Boocock
+            @date 10 Feb 2017
+        """
+        
+        return None
+
+    def _get_left_bp(self, slop, mapping_quality, duplication=False, clip_size=20): 
         """
             Get the left break point
         """
-        reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart1 - slop, self.breakStart1 + slop)
+        if duplication:
+            reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart2 - slop, self.breakStart2 + slop)
+        else:
+            reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart1 - slop, self.breakStart1 + slop)
         supporting = 0
         not_supporting = 0
         read_one_list = []
@@ -103,22 +118,41 @@ class CNVrow(object):
         read_pos_r2 = []
         read1_pos_mapq=[]
         read2_pos_mapq=[]
+        if duplication:
+            breakStart1 = self._breakStart2
+        else:
+            breakStart1 = self._breakStart1
+        total_bad = 0
         for reads in reads_tmp:
             if reads.mapping_quality <= mapping_quality or reads.is_duplicate:
                 continue
             read_split = reads.cigartuples[len(reads.cigartuples)-1]
             if not (read_split[0] == 4 or read_split[0] == 5):
-                if reads.reference_start > self.breakStart1:
+                if reads.reference_start > breakStart1:
                     continue
-                if (reads.reference_start + reads.query_length) > (self.breakStart1):
+                if (reads.reference_start + reads.reference_length) > (breakStart1):
+                    if duplication:
+                        if reads.reference_start > (self._breakStart1 - 1):
+                            continue
                     not_supporting += self._prob_mapq(reads.mapping_quality)
                 continue
             type_clip = read_split[0]
-            if type_clip == 4:
-                break_point = reads.reference_start  + (reads.query_length - read_split[1])
-            elif type_clip == 5:
-                break_point = reads.reference_start  + (reads.query_length)
-            if break_point == self.breakStart1:
+            if reads.cigartuples[0][0] == 4 or reads.cigartuples[0][0] == 5:
+                continue
+            if read_split[1] < clip_size:
+                continue
+            if (reads.reference_start + reads.reference_length + read_split[1]) < breakStart1:
+                continue
+            #print(breakStart1)
+            #print(reads)
+            #print(reads.reference_length)
+            #if type_clip == 4:
+            #    break_point = reads.reference_start  + (reads.query_length - read_split[1])
+            #elif type_clip == 5:
+            #    break_point = reads.reference_start  + (reads.query_length)
+            #print(break_point)
+            break_point = reads.reference_start + reads.reference_length
+            if break_point == breakStart1:
                 if reads.is_read1:
                     read_one_list.append(reads.query_name +"/1")
                     read_one_complement.append(reads.is_reverse)
@@ -132,7 +166,7 @@ class CNVrow(object):
                     read2_pos_mapq.append(reads.mapping_quality)
                     #fasta.extract_reads(self._fasta_two, reads.query_name +"/2")
                 #  Check for matches 
-            elif break_point > self.breakStart1: 
+            elif break_point != breakStart1: 
                 not_supporting += self._prob_mapq(reads.mapping_quality)
         temp_out = tempfile.NamedTemporaryFile(delete=False) 
         for read_one in read_one_list:
@@ -152,12 +186,12 @@ class CNVrow(object):
             break_in.readline()
             seq_break = break_in.readline().strip()
             for read_id, item in fasta_check.sequences.items():
-                pos_in_brk1 = (item[1] - (self.breakStart1 -300))
+                pos_in_brk1 = (item[1] - (breakStart1 -300))
                 tmp_seq_brk = (seq_break[pos_in_brk1:])
                 tmp_seq_read = item[0][:len(tmp_seq_brk)]
                 tmp_seq_brk = tmp_seq_brk[:len(tmp_seq_read)]
                 identity = waterman.water(tmp_seq_brk, tmp_seq_read)
-                if identity > 0.99:
+                if identity > 0.95:
                     supporting += self._prob_mapq(item[2])
                 else:
                     not_supporting += self._prob_mapq(item[2])
@@ -165,11 +199,10 @@ class CNVrow(object):
         gt_likelihoods.genotype_likelihoods(not_supporting, supporting)
         return supporting, not_supporting
     
-    def _get_right_bp(self, slop, mapping_quality):
+    def _get_right_bp(self, slop, mapping_quality, duplication=False, clip_size = 20):
         """
             Get the right breakpoint 
         """
-        reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart1 - slop, self.breakStart1 + slop)
         supporting = 0
         not_supporting = 0
         read_one_list = []
@@ -180,19 +213,33 @@ class CNVrow(object):
         read_pos_r2 = []
         read1_pos_mapq=[]
         read2_pos_mapq=[]
-        reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart2 - slop, self.breakStart2 + slop)
+        if duplication:
+            breakStart2 = self._breakStart1
+        else:
+            breakStart2 = self._breakStart2
+        if duplication:
+            break_point_tmp = self._breakStart1
+        else:
+            break_point_tmp = self._breakEnd2
+        reads_tmp = self.bam_file.fetch(self.chrom, breakStart2 - slop, breakStart2 + slop)
         for reads in reads_tmp:
             if reads.mapping_quality <= mapping_quality or reads.is_duplicate:
                 continue
             read_split = reads.cigartuples[0]
             if not (read_split[0] == 4 or read_split[0] == 5):
                 # Ensure end is not working
-                if reads.reference_start > self.breakStart1:
+                if reads.reference_start > breakStart2:
                     continue
-                if (reads.reference_start < self.breakStart2) and (reads.reference_start + reads.query_length) > (self.breakStart2):
+                if (reads.reference_start < breakStart2) and (reads.reference_start + reads.query_length) > (breakStart2):
+                    if duplication:
+                        continue
                     not_supporting +=1
                 continue
             type_clip = read_split[0]
+            if reads.cigartuples[len(reads.cigartuples) -1][0] == 4 or reads.cigartuples[len(reads.cigartuples)-1][0] == 5:
+                continue
+            if read_split[1] < clip_size:
+                continue
             if type_clip == 4:
                 #print(reads)
                 #print(read_split)
@@ -201,7 +248,7 @@ class CNVrow(object):
                 #print(reads)
                 #print(read_split)
                 break_point = reads.reference_start 
-            if break_point == self._breakEnd2:
+            if break_point == break_point_tmp: 
                 if reads.is_read1:
                     read_one_list.append(reads.query_name +"/1")
                     read_one_complement.append(reads.is_reverse)
@@ -230,7 +277,6 @@ class CNVrow(object):
         for read_two in read_two_list:
             temp_out.write(read_two + "\n")
         temp_out.close()
-        print(temp_out.name)
         tmp_fasta2 = fasta.extract_reads(self._fasta_two, temp_out.name) 
         #os.remove(temp_out.name)
         fasta_check = fasta.FastaInput(tmp_fasta1, tmp_fasta2, read_one_complement, read_two_complement, read_pos_r1, read_pos_r2,read1_pos_mapq, read2_pos_mapq)
@@ -239,110 +285,42 @@ class CNVrow(object):
             break_in.readline()
             seq_break = break_in.readline().strip()
             for read_id, item in fasta_check.sequences.items():
-                print(item)
-                pos_in_brk1 = (item[1] - (self._breakEnd2 -300))
+                pos_in_brk1 = (item[1] - (break_point_tmp-300))
                 tmp_seq_brk = (seq_break[pos_in_brk1:])
                 tmp_seq_read = item[0][:len(tmp_seq_brk)]
-                print(read_id)
-                print(tmp_seq_read)
                 tmp_seq_brk = tmp_seq_brk[:len(tmp_seq_read)]
-                print(tmp_seq_brk)
                 identity = waterman.water(tmp_seq_brk, tmp_seq_read)
-                print(identity)
-                if identity > 0.99:
+                if identity > 0.95:
                     supporting +=1
                 else:
                     not_supporting +=1
-        print(supporting, not_supporting)
         return supporting, not_supporting
 
-    def _get_left_bp(self, slop, mapping_quality):
-        """
-            Get the self breakpoint
-        """
-        reads_tmp = self.bam_file.fetch(self.chrom, self.breakStart1 - slop, self.breakStart1 + slop)
-        supporting = 0
-        not_supporting = 0
-        read_one_list = []
-        read_two_list = []
-        read_one_complement =[]
-        read_two_complement =[]
-        read_pos_r1 = []
-        read_pos_r2 = []
-        read1_pos_mapq=[]
-        read2_pos_mapq=[]
-        # Left BP
-        for reads in reads_tmp:
-            if reads.mapping_quality <= mapping_quality or reads.is_duplicate:
-                continue
-            read_split = reads.cigartuples[len(reads.cigartuples)-1]
-            if not (read_split[0] == 4 or read_split[0] == 5):
-                # Ensure end is not working
-                if reads.reference_start > self.breakStart1:
-                    continue
-                if (reads.reference_start + reads.query_length) > (self.breakStart1):
-                    not_supporting +=1
-                continue
-            type_clip = read_split[0]
-            if type_clip == 4:
-                break_point = reads.reference_start  + (reads.query_length - read_split[1])
-            elif type_clip == 5:
-                break_point = reads.reference_start  + (reads.query_length)
-            if break_point == self.breakStart1:
-                if reads.is_read1:
-                    read_one_list.append(reads.query_name +"/1")
-                    read_one_complement.append(reads.is_reverse)
-                    read_pos_r1.append(reads.reference_start) 
-                    read1_pos_mapq.append(reads.mapping_quality)
-                    #fasta.extract_reads(self._fasta_one, reads.query_name + "/1")
-                else:
-                    read_two_list.append(reads.query_name +"/2")
-                    read_two_complement.append(reads.is_reverse)
-                    read_pos_r2.append(reads.reference_start) 
-                    read2_pos_mapq.append(reads.mapping_quality)
-                    #fasta.extract_reads(self._fasta_two, reads.query_name +"/2")
-                #  Check for matches 
-            elif break_point > self.breakStart1: 
-                not_supporting += 1 
-            elif break_point < self.breakStart1:
-                not_supporting += 1 
-        temp_out = tempfile.NamedTemporaryFile(delete=False) 
-        for read_one in read_one_list:
-            temp_out.write(read_one +"\n")
-        temp_out.close()
-        tmp_fasta1 = fasta.extract_reads(self._fasta_one, temp_out.name) 
-        os.remove(temp_out.name)
-        temp_out = tempfile.NamedTemporaryFile(delete=False) 
-        for read_two in read_two_list:
-            temp_out.write(read_two + "\n")
-        temp_out.close()
-        tmp_fasta2 = fasta.extract_reads(self._fasta_two, temp_out.name) 
-        os.remove(temp_out.name)
-        fasta_check = fasta.FastaInput(tmp_fasta1, tmp_fasta2, read_one_complement, read_two_complement, read_pos_r1, read_pos_r2,read1_pos_mapq, read2_pos_mapq)
-        with open(os.path.join(self._break_point_folder, self._event_id + "_" + self._variant_type + ".brk1.fasta")) as break_in:
-        #with open(self._break_point_folder 
-            break_in.readline()
-            seq_break = break_in.readline().strip()
-            for read_id, item in fasta_check.sequences.items():
-                pos_in_brk1 = (item[1] - (self.breakStart1 -300))
-                tmp_seq_brk = (seq_break[pos_in_brk1:])
-                tmp_seq_read = item[0][:len(tmp_seq_brk)]
-                tmp_seq_brk = tmp_seq_brk[:len(tmp_seq_read)]
-                identity = waterman.water(tmp_seq_brk, tmp_seq_read)
-                if identity > 0.99:
-                    supporting +=1
-                else:
-                    not_supporting +=1
-        return (supporting, not_supporting)
 
     def extract_windowed_reads(self, slop, mapping_quality=20): 
         """
             Extract windowed reads for both R1 and R2.
         """
+        if "duplication" in self._variant_type:
+            duplication = True
+        else:
+            duplication = False
+        left_support, left_no_support = self._get_left_bp(slop, mapping_quality, duplication=duplication)
+        right_support, right_no_support = self._get_right_bp(slop, mapping_quality, duplication=duplication)
+        # Fisher's exact to ensure we are sampling both ends of the breakpoint
+        (GQ, GT)= gt_likelihoods.genotype_likelihoods(left_support + right_support, left_no_support + right_no_support)
+        self._GT = GT
+        self._GQ = GQ
+        self._LS = left_support
+        self._LNS = left_no_support
+        self._RS = right_support 
+        self._RNS = right_no_support 
+        self._S = left_support + right_support 
+        self._RS = left_no_support + right_no_support 
+        print("GQ = {0}, GT {1}, S {2}, NS {3}, EVENTID = {4}".format(GQ, GT, left_support + right_support, left_no_support + right_no_support, self._event_id))
+        print("LS = {0}, LNS = {1}, RS = {2}, RNS = {3}".format(left_support, left_no_support, right_support, right_no_support))
 
-        #left_support, left_no_support = self._get_left_bp(slop, mapping_quality)
-        right_support, right_no_support = self._get_right_bp(slop, mapping_quality)
-        return reads_tmp
+
 
 class CNVs(object):
 
@@ -364,7 +342,7 @@ class CNVs(object):
                       cnv_input_row_split[20],bam_file,fasta_one,fasta_two, break_point_folder))
 
     def extract_windowed_bam_reads(self,i, slop=200):
-        temp_reads = self.input_rows[i].extract_windowed_reads(slop) 
+        self.input_rows[i].extract_windowed_reads(slop) 
 
     def __len__(self):
         """
