@@ -28,7 +28,7 @@ import shutil
 
 from long_read_pipeline import input_file 
 from long_read_pipeline.speedseq import align
-from long_read_pipeline.utils import scaffold, fasta
+from long_read_pipeline.utils import scaffold, fasta, vcf
 from long_read_pipeline.pilon import pilon 
 from long_read_pipeline.cnv import cnv, cnv_calls
 
@@ -104,8 +104,12 @@ def genotype_cnvs_wrap(args):
             if cnvs.input_rows[i]._chrom1 != "chrM":
                 cnvs.extract_windowed_bam_reads(i)
         # Write VCF file
+        vcf_output = open(os.path.join(args.output_directory, sample.samples_name + ".vcf"),"w") 
+        vcf.write_vcf_header(sample.samples_name, vcf_output)
         for i in range(len(cnvs)):
-            print("Write VCF")
+            vcf.write_vcf_row(cnvs.input_rows[i], vcf_output) 
+            
+        
 
 def cnv_call_wrap(args):
     """

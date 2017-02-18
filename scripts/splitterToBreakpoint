@@ -83,8 +83,8 @@ def _extract_breakpoints(region, output_prefix, slop=300, fasta_input_file="/Use
                     seq2 = seq_fastq[(end_idx):(int(end_read)+slop)]
                     #print(seq)
                     if region.strand1 == "-":
-                        seq1 = seq_fastq[(start_idx):(int(start_read)+slop)]
-                        seq2 = seq_fastq[(end_idx):(int(end_read)+slop)]
+                        seq1 = seq_fastq[(end_idx):(int(end_read)+slop)]
+                        seq2 = seq_fastq[(start_idx):(int(start_read)+slop)]
                         seq1 = complement(seq1)
                         seq2 = complement(seq2)
                 #print(seq)
@@ -108,12 +108,12 @@ def _extract_breakpoints(region, output_prefix, slop=300, fasta_input_file="/Use
                     else:
                         start_idx = int(start_read) - slop
                         start_slop = slop
-                    seq2 = seq_fastq[(end_idx):(int(end_read)+slop)]
                     seq1 = seq_fastq[(start_idx):(int(start_read)+slop)]
+                    seq2 = seq_fastq[(end_idx):(int(end_read)+slop)]
                     #print(seq)
                     if region.strand1 == "-":
-                        seq2= seq_fastq[(end_idx):(int(end_idx)+slop)]
-                        seq1 = seq_fastq[(start_idx):(int(start_read)+slop)]
+                        seq2= seq_fastq[(start_idx):(int(start_read)+slop)]
+                        seq1 = seq_fastq[(end_idx):(int(end_read)+slop)]
                         seq1 = complement(seq1)
                         seq2 = complement(seq2)
                    #print(seq)
@@ -144,6 +144,8 @@ def complement(sequence):
             sequence_updated.append("T")
         elif char =="T":
             sequence_updated.append("A")
+        else:
+            sequence_updated.append(char)
     return "".join(sequence_updated[::-1])
 
 def processFasta(region, output_prefix, fasta_input_file="/Users/smilefreak/Programming/OpenSource/MyGitHub/long_read_pipeline/scripts/test/RM_scaffolds.fasta"):

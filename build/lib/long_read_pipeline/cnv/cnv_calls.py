@@ -61,6 +61,32 @@ class CNVrow(object):
         self._break_point_folder = break_point_folder 
 
     @property
+    def strand1(self):
+        return self._strand1
+    @property
+    def strand2(self):
+        return self._strand2
+    
+    @property
+    def svlen(self):
+        return self._event_length
+    @property 
+    def unaccounted_for_sequence(self):
+        return self._unaccounted_for_sequence
+    @property
+    def breakstart1(self):
+        return self._breakStart1
+    @property
+    def breakstart2(self):
+        return self._breakStart2
+    @property 
+    def breakend1(self):
+        return self._breakEnd1
+    @property 
+    def breakend2(self):
+        return self._breakEnd2
+
+    @property
     def read_one(self):
         return self._r1
     @property
@@ -71,12 +97,25 @@ class CNVrow(object):
     def chrom(self):
         return self._chrom1
 
+    @property 
+    def variant_type(self):
+        return self._variant_type
+
     @property
     def breakStart1(self):
         return self._breakStart1
     @property 
     def breakStart2(self):
         return self._breakStart2
+    @property
+    def breakEnd1(self):
+        return self._breakEnd1
+    @property 
+    def breakEnd2(self):
+        return self.breakEnd2
+    @property
+    def event_id(self):
+        return self._event_id
     @property
     def bam_file(self):
         return self._bam_file
@@ -100,7 +139,7 @@ class CNVrow(object):
         
         return None
 
-    def _get_left_bp(self, slop, mapping_quality, duplication=False, clip_size=20): 
+    def _get_left_bp(self, slop, mapping_quality, duplication=False, clip_size=5): 
         """
             Get the left break point
         """
@@ -182,7 +221,7 @@ class CNVrow(object):
         os.remove(temp_out.name)
         fasta_check = fasta.FastaInput(tmp_fasta1, tmp_fasta2, read_one_complement, read_two_complement, read_pos_r1, read_pos_r2,read1_pos_mapq, read2_pos_mapq)
         with open(os.path.join(self._break_point_folder, self._event_id + "_" + self._variant_type + ".brk1.fasta")) as break_in:
-        #with open(self._break_point_folder 
+            #with open(self._break_point_folder 
             break_in.readline()
             seq_break = break_in.readline().strip()
             for read_id, item in fasta_check.sequences.items():
@@ -198,8 +237,8 @@ class CNVrow(object):
             #print(read_id)
         gt_likelihoods.genotype_likelihoods(not_supporting, supporting)
         return supporting, not_supporting
-    
-    def _get_right_bp(self, slop, mapping_quality, duplication=False, clip_size = 20):
+
+    def _get_right_bp(self, slop, mapping_quality, duplication=False, clip_size = 5):
         """
             Get the right breakpoint 
         """
@@ -316,10 +355,34 @@ class CNVrow(object):
         self._RS = right_support 
         self._RNS = right_no_support 
         self._S = left_support + right_support 
-        self._RS = left_no_support + right_no_support 
+        self._NS = left_no_support + right_no_support 
         print("GQ = {0}, GT {1}, S {2}, NS {3}, EVENTID = {4}".format(GQ, GT, left_support + right_support, left_no_support + right_no_support, self._event_id))
         print("LS = {0}, LNS = {1}, RS = {2}, RNS = {3}".format(left_support, left_no_support, right_support, right_no_support))
 
+    @property 
+    def GT(self):
+        return self._GT
+    @property
+    def GQ(self):
+        return self._GQ
+    @property
+    def LS(self):
+        return self._LS
+    @property
+    def RS(self):
+        return self._RS
+    @property
+    def RNS(self):
+        return self._RNS
+    @property
+    def LNS(self):
+        return self._LNS
+    @property
+    def S(self):
+        return self._S
+    @property
+    def NS(self):
+        return self._NS
 
 
 class CNVs(object):

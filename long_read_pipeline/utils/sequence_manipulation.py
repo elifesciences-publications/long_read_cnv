@@ -29,6 +29,8 @@ def rev_complement(sequence):
             sequence_updated.append("T")
         elif char == "T":
             sequence_updated.append("A")
+        else:
+            sequence_updated.append(char)
     return "".join(sequence_updated[::-1])
 
 
