@@ -107,7 +107,9 @@ def genotype_cnvs_wrap(args):
         vcf_output = open(os.path.join(args.output_directory, sample.samples_name + ".vcf"),"w") 
         vcf.write_vcf_header(sample.samples_name, vcf_output)
         for i in range(len(cnvs)):
-            vcf.write_vcf_row(cnvs.input_rows[i], vcf_output) 
+            if cnvs.input_rows[i]._chrom1 != "chrM":
+                cnvs.extract_windowed_bam_reads(i)
+                vcf.write_vcf_row(cnvs.input_rows[i], vcf_output) 
             
         
 
@@ -145,7 +147,7 @@ def pilon_align_wrap(args):
     # If PE and SE files are present run pilon to fix the contigs otherwise just filter.
     for sample in in_file:
         temp_fasta = scaffold.scaffold_filter(sample.scaffolds, args.temp_dir, sample.min_contig_length)
-        align.align_reads(sample,args.temp_dir, temp_fasta) 
+        align.align_reads(sample,args.temp_dir, temp_fasta, skip=True) 
         pilon.run_pilon_contigs(sample, args.temp_dir, temp_fasta)
         bwa_output = align.simple_bwa(sample, args.temp_dir, args.reference_file)
         os.rename(bwa_output, os.path.join(args.output_directory, os.path.basename(bwa_output)))

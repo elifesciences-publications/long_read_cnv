@@ -148,15 +148,15 @@ def write_vcf_row(cnv_row, file_name):
     REF = "."
     ALT = _convert_variant_type(cnv_row.variant_type)
     # FIX ME: uses sample GQ currently
-    QUAL = str(cnv_row.GQ)
+    QUAL = float(cnv_row.GQ)
     if QUAL > 100:
         FILTER = "PASS"
     else:
         FILTER = "lowqual"
+    QUAL = str(cnv_row.GQ)
     INFO_STRING = _create_info_string(cnv_row)
     FORMAT="GT:S:NS:LS:LNS:RS:RNS:GQ"
-    GT_STRING = _create_gt_string(cnv_row) 
-
-    print("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,GT_STRING]))
-    file_name.write("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,GT_STRING]))
+    GT_STRING = _create_gt_string(cnv_row)
+    print("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,FORMAT,GT_STRING]))
+    file_name.write("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,FORMAT,GT_STRING]))
     file_name.write("\n")

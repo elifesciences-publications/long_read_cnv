@@ -108,7 +108,7 @@ def genotype_cnvs_wrap(args):
         vcf_output = open(os.path.join(args.output_directory, sample.samples_name + ".vcf"),"w") 
         vcf.write_vcf_header(sample.samples_name, vcf_output)
         for i in range(len(cnvs)):
-            if cnvs.input_rows[i]._chrom1 != "chrM": 
+            if cnvs.input_rows[i]._chrom1 != "chrM":
                 vcf.write_vcf_row(cnvs.input_rows[i], vcf_output) 
             
         
