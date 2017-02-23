@@ -19,14 +19,20 @@
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 from long_read_pipeline.config import *
-import os
+import logging
 import subprocess
+import os
 
-def call_cnvs(input_file, mapping_quality, bam_file, output_directory, fasta_reference):
+def run_pilon_contigs(input_file, temp_dir, temp_fasta=None): 
     """
-       Call CNVS questions 
+        java -jar -Xmx 32G pilon.jar  
     """
-    cnv_output_script = os.path.join(output_directory, input_file.samples_name) 
-    cnv_analysis_script = "samtools view -q {0} -S {1} | " + SPLITREADBEDTOPE + " -i stdin | grep -v telo | " +SPLITTERTOBREAKPOINT + " -i stdin -s 0 -r {2} -o {3}"
-    cnv_analysis_script =  cnv_analysis_script.format(mapping_quality, bam_file, fasta_reference, cnv_output_script) 
-    subprocess.check_call(cnv_analysis_script,shell=True) 
+    logging.info("Running PILON to fix contigs")
+    if temp_fasta is not None:
+        pilon_jar = " java -Xmx4G -jar {0} --genome {1} --frags {2} --outdir {3} --output {4}".format(PILON_PATH, temp_fasta, input_file.bam_file, temp_dir, input_file.samples_name) 
+    else:
+        pilon_jar = " java -Xmx4G -jar {0} --genome {1} --frags {2} --outdir {3} --output {4}".format(PILON_PATH, temp_fasta, input_file.bam_file, temp_dir, input_file.samples_name) 
+    output_file = os.path.join(temp_dir, input_file.samples_name + ".fasta")
+    input_file.set_pilon_fasta(output_file)
+    subprocess.check_call(pilon_jar, shell=True)
+

@@ -374,7 +374,7 @@ def splitterToBreakpoint(contigFile,splitReadSlop,localRange, reference_genome, 
         # For now ignore inversions
         if variant_type != "inversion":
             cnv_out.write(str(cnv_output) +"\n")
-        else:
+        elif variant_type == "inversion":
             inversion_out.write(str(cnv_output) + "\n")
     inversion_out.close()
     cnv_out.close()

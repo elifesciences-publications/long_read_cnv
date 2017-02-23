@@ -18,15 +18,22 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from long_read_pipeline.config import *
+import pysam
+import logging
 import os
-import subprocess
 
-def call_cnvs(input_file, mapping_quality, bam_file, output_directory, fasta_reference):
+def scaffold_filter(scaffolds, temp_dir, min_contig_length):
     """
-       Call CNVS questions 
+       Filter the scaffolds. 
     """
-    cnv_output_script = os.path.join(output_directory, input_file.samples_name) 
-    cnv_analysis_script = "samtools view -q {0} -S {1} | " + SPLITREADBEDTOPE + " -i stdin | grep -v telo | " +SPLITTERTOBREAKPOINT + " -i stdin -s 0 -r {2} -o {3}"
-    cnv_analysis_script =  cnv_analysis_script.format(mapping_quality, bam_file, fasta_reference, cnv_output_script) 
-    subprocess.check_call(cnv_analysis_script,shell=True) 
+    
+    assembly = pysam.Fastafile(scaffolds)
+    idx_keep = [i for i, lengths in enumerate(assembly.lengths) if lengths > int(min_contig_length)] 
+    references_to_keep = [reference  for i, reference in enumerate(assembly.references) if i in idx_keep]
+    temp_fname = os.path.join(temp_dir,os.path.basename(scaffolds)) 
+    with open(temp_fname,"w") as temp_scaffolds:
+        for references in references_to_keep:
+            seq = assembly.fetch(region=references)
+            temp_scaffolds.write(">" +references + "\n" + seq + "\n")
+    return temp_fname
+    

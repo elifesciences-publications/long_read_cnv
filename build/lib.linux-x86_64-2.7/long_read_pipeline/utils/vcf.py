@@ -94,6 +94,7 @@ def _create_info_string(cnv_row):
     info_dict["BREAKEND1"] = cnv_row.breakend1
     info_dict["BREAKEND2"] = cnv_row.breakend2
     info_dict["STRANDS"] = cnv_row.strand1 + cnv_row.strand2
+    info_dict["EVENT_LENGTH"] = cnv_row.svlen
     out_string = "" 
     length_of_info = len(info_dict.values())
     for i, item in enumerate(info_dict.items()):
