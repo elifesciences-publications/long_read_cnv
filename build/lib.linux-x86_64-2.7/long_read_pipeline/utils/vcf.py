@@ -94,7 +94,6 @@ def _create_info_string(cnv_row):
     info_dict["BREAKEND1"] = cnv_row.breakend1
     info_dict["BREAKEND2"] = cnv_row.breakend2
     info_dict["STRANDS"] = cnv_row.strand1 + cnv_row.strand2
-    info_dict["EVENT_LENGTH"] = cnv_row.svlen
     out_string = "" 
     length_of_info = len(info_dict.values())
     for i, item in enumerate(info_dict.items()):
@@ -156,8 +155,7 @@ def write_vcf_row(cnv_row, file_name):
     QUAL = str(cnv_row.GQ)
     INFO_STRING = _create_info_string(cnv_row)
     FORMAT="GT:S:NS:LS:LNS:RS:RNS:GQ"
-    GT_STRING = _create_gt_string(cnv_row) 
-
+    GT_STRING = _create_gt_string(cnv_row)
     print("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,FORMAT,GT_STRING]))
     file_name.write("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,FORMAT,GT_STRING]))
     file_name.write("\n")

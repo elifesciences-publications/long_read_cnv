@@ -27,10 +27,10 @@ def simple_bwa(input_file, temp_dir, reference_file):
     """
         Simple BWA
     """
-    bwa_output = os.path.join(temp_dir, input_file.samples_name + ".align_to_ref.bam") 
+    bwa_output = os.path.join(temp_dir, input_file.samples_name + ".align_to_ref.bam")
     bwa_command = " bwa mem {0} {1} | samtools view -bS - > {2}".format(reference_file, input_file.pilon_fasta, bwa_output)
     subprocess.check_call(bwa_command, shell=True)
-    bwa_sorted_output= os.path.join(temp_dir, input_file.samples_name + ".align_to_ref.sorted.bam") 
+    bwa_sorted_output= os.path.join(temp_dir, input_file.samples_name + ".align_to_ref.sorted.bam")
     bwa_command = " samtools sort -o {0} {1}".format(bwa_sorted_output, bwa_output)
     #bwa_sorted_output += ".bam"
     subprocess.check_call(bwa_command, shell=True)

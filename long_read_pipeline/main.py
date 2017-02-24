@@ -63,7 +63,7 @@ def parse_args():
     cnv_parser.add_argument("-t", "--temp-working-dir", dest="temp_dir", help="working dir file", default="tmp_dir") 
     cnv_parser.add_argument("-d", "--directory", dest="input_directory", help="Input directory", required=True)
     cnv_parser.add_argument("-o", "--output-directory", dest="output_directory", help="Output directory", default="out_dir") 
-    cnv_parser.add_argument("-q", "--map-quality", dest="mapping_quality", help="Mapping Quality", default=50)
+    cnv_parser.add_argument("-q", "--map-quality", dest="mapping_quality", help="Mapping Quality", default=30)
     cnv_parser.set_defaults(func=cnv_call_wrap)
     
     genotype_cnvs = subparsers.add_parser("gtcnvs", help="genotype CNVs and write VCF file")
@@ -72,7 +72,10 @@ def parse_args():
     genotype_cnvs.add_argument("-d", "--directory", dest="input_directory", help="Input directory", required=True)
     genotype_cnvs.add_argument("-o", "--output-directory", dest="output_directory", help="Output directory", default="out_dir") 
     genotype_cnvs.add_argument("-r","--reference-file", dest="reference_file", help="Reference genome", required=True)
+    genotype_cnvs.add_argument("--s","--sample_folder", dest="sample_folder", help="Sample folder",required=True)
     genotype_cnvs.set_defaults(func=genotype_cnvs_wrap)
+    
+    
     args = parser.parse_args()
     return args
 
@@ -110,7 +113,23 @@ def genotype_cnvs_wrap(args):
         for i in range(len(cnvs)):
             if cnvs.input_rows[i]._chrom1 != "chrM":
                 vcf.write_vcf_row(cnvs.input_rows[i], vcf_output) 
+    if args.sample_folder is not None:
+        sample_folders = args.sample_folder.split(",")
+        for sample_folder in 
             
+def genotype_in_larger_cohort(args):
+    """
+        Genotype CNVs in a larger cohort
+    """
+    vcfs = args.vcfs
+    try:
+        os.mkdir(args.temp_dir)
+    except OSError:
+        pass
+    try:
+        os.mkdir(args.output_directory)
+    except OSError:
+        pass
         
 
 def cnv_call_wrap(args):

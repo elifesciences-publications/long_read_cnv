@@ -63,7 +63,7 @@ def parse_args():
     cnv_parser.add_argument("-t", "--temp-working-dir", dest="temp_dir", help="working dir file", default="tmp_dir") 
     cnv_parser.add_argument("-d", "--directory", dest="input_directory", help="Input directory", required=True)
     cnv_parser.add_argument("-o", "--output-directory", dest="output_directory", help="Output directory", default="out_dir") 
-    cnv_parser.add_argument("-q", "--map-quality", dest="mapping_quality", help="Mapping Quality", default=50)
+    cnv_parser.add_argument("-q", "--map-quality", dest="mapping_quality", help="Mapping Quality", default=30)
     cnv_parser.set_defaults(func=cnv_call_wrap)
     
     genotype_cnvs = subparsers.add_parser("gtcnvs", help="genotype CNVs and write VCF file")
@@ -74,6 +74,7 @@ def parse_args():
     genotype_cnvs.add_argument("-r","--reference-file", dest="reference_file", help="Reference genome", required=True)
     genotype_cnvs.set_defaults(func=genotype_cnvs_wrap)
     args = parser.parse_args()
+    print(args)
     return args
 
 
@@ -108,7 +109,7 @@ def genotype_cnvs_wrap(args):
         vcf_output = open(os.path.join(args.output_directory, sample.samples_name + ".vcf"),"w") 
         vcf.write_vcf_header(sample.samples_name, vcf_output)
         for i in range(len(cnvs)):
-            if cnvs.input_rows[i]._chrom1 != "chrM": 
+            if cnvs.input_rows[i]._chrom1 != "chrM":
                 vcf.write_vcf_row(cnvs.input_rows[i], vcf_output) 
             
         
