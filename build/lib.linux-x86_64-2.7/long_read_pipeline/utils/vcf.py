@@ -18,6 +18,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
+import gzip
 import collections
 
 default_vcf_header="""##fileformat=VCFv4.2
@@ -69,6 +70,9 @@ def _convert_variant_type(variant_type):
         return "DUP"
     if variant_type == "complex_deletion":
         return "DEL"
+
+
+
 
 
 def _create_info_string(cnv_row):
@@ -159,3 +163,119 @@ def write_vcf_row(cnv_row, file_name):
     print("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,FORMAT,GT_STRING]))
     file_name.write("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,FORMAT,GT_STRING]))
     file_name.write("\n")
+
+
+class VCFSimpleRow(object):
+    """
+
+        Simple VCF Row 
+    """
+
+
+    def __init__(self, row, ids=None):
+        row_s = row.strip().split("\t")
+        self._CHROM = row_s[0]
+        self._POS = row_s[1]
+        if ids == None:
+            self._ID = row_s[2]
+        else:
+            self._ID = ids 
+        self._REF = row_s[3]
+        self._ALT = row_s[4]
+        self._QUAL = row_s[5]
+        self._FILTER = row_s[6]
+        self._INFO = row_s[7]
+        self._FORMAT = row_s[8]
+        self._GTSTRING = row_s[9]
+        self._extra_rows = []
+        self._row_count = 1
+
+    def add_row(self,line):
+        self._extra_rows.append(VCFSimpleRow(line))
+        self._row_count += 1
+
+    @property
+    def row_count(self):
+        return self._row_count
+    @property
+    def gtstring(self):
+        return self._GTSTRING
+    @property
+    def chrom(self):
+        return self._CHROM
+    @property
+    def pos(self):
+        return self._POS
+    @property
+    def ids(self):
+        return self._ID
+    @property
+    def ref(self):
+        return self._REF
+    @property
+    def alt(self):
+        return self._ALT
+    @property
+    def qual(self):
+        return self._QUAL
+    @property 
+    def filter(self):
+        return self._FILTER
+    @property
+    def format(self):
+        return self._FORMAT
+    @property
+    def gtstring(self):
+        return self._GTSTRING
+    @property
+    def info(self):
+        return self._INFO
+    @property
+    def flag(self):
+        return self._FLAG
+    def __str__(self):
+        out_string = "\t".join(map(str,[self.chrom, self.pos,self.ids, self.ref, self.alt, self.qual, self.filter, self.info,self.format] + self._gt_string_list))
+        return out_string
+
+    def set_qual(self, qual):
+        self._QUAL = int(qual)
+
+    def set_format(self, FORMAT):
+        self._FORMAT = FORMAT
+    
+    def set_flag(self, flag):
+        self._FLAG = flag
+
+    # Bad design this should be in a different class.
+    def add_sample(self, sample, info, gt_string):
+        self._INFO = info
+        try:
+            self._gt_string_list[0] 
+        except AttributeError:
+            self._gt_string_list = []
+            self._sample_list = []
+        self._gt_string_list.append(gt_string)
+        self._sample_list.append(sample)
+
+
+class VCFSimple(object):
+    """
+        Simple VCF object
+    """
+    def __init__(self,vcf):
+        self._vcf_dict={}
+        self._vcf_header=""
+        with gzip.open(vcf) as f:
+            for line in f:
+                if "#" not in line:
+                    ids = line.split("\t")[2] 
+                    strip_line = line.strip()
+                    try:
+                        ids  = self._vcf_dict[ids].ids
+                        self._vcf_dict[ids].add_row(line)
+                    except KeyError:
+                        self._vcf_dict[ids] = VCFSimpleRow(line,ids)
+                else:
+                    self._vcf_header+=(line)
+
+        

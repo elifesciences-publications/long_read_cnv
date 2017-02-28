@@ -7,7 +7,7 @@ import pysam
 
 class CNVOutput(object):
 
-    def __init__(self, chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant, variant_type, unaccounted_for_sequence, event_length):
+    def __init__(self, chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant, variant_type, unaccounted_for_sequence, event_length,i ):
         self.chrom1 = chrom1
         self.breakStart1 = breakStart1 
         self.breakEnd1 = breakEnd1 
@@ -29,7 +29,7 @@ class CNVOutput(object):
         self.variant_type = variant_type 
         self.unaccounted_for_sequence = unaccounted_for_sequence 
         self.event_length = event_length
-        self.event_id = self.chrom1+":"+self.breakEnd1 +"-" +self.breakStart2 + "_" + self.variant_type
+        self.event_id = self.chrom1+":"+self.breakEnd1 +"-" +self.breakStart2 + "_" + self.variant_type + "_" + str(i)
 
     def __str__(self):
         return '\t'.join(map(str, [self.chrom1, self.breakStart1, self.breakEnd1, self.chrom2, self.breakStart2, self.breakEnd2, self.ID, self.score, self.strand1, self.strand2, self.queryStart1, self.queryEnd1, self.queryStart2, self.queryEnd2  , self.minNonOverlap, self.queryLength, self.qualScores, self.variant_type, self.unaccounted_for_sequence, self.event_length,self.chrom1+":"+self.breakEnd1 +"-" +self.breakStart2]))
@@ -206,7 +206,7 @@ def splitterToBreakpoint(contigFile,splitReadSlop,localRange, reference_genome, 
     header = "chrom1\tbreakstart1\tbreakend1\tchrom2\tbreakstart2\tbreakend2\tID\tscore\tstrand1\tstrand2\tquerystart1\tqueryend1\tquerystart2\tqueryend2\tminnonoverlap\tquerylength\tqualscores\tvariant_type\tunaccount_for_sequence\tevent_length\tevent_id\n"
     inversion_out.write(header)
     cnv_out.write(header)
-    for line in contigs:
+    for i, line in enumerate(contigs):
         split = line.split()     
         if (split[0] > split[3]): 
             chrom1 = split[3]
@@ -368,7 +368,7 @@ def splitterToBreakpoint(contigFile,splitReadSlop,localRange, reference_genome, 
                 breakEnd2 = str(end2+1+splitReadSlop)
         else:
             print "ERROR: " + ID + " is lost in breakpoint locus prediction step. Contact Mitchell"
-        cnv_output = CNVOutput(chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant, variant_type, unaccounted_for_sequence, event_length)
+        cnv_output = CNVOutput(chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant, variant_type, unaccounted_for_sequence, event_length, i)
         processFasta(cnv_output, fasta_input_file=reference_genome, output_prefix=output_prefix)
         _extract_breakpoints(cnv_output, fasta_input_file=reference_genome, output_prefix=output_prefix)
         # For now ignore inversions
