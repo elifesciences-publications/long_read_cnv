@@ -119,6 +119,7 @@ class CNVrow(object):
     @property
     def bam_file(self):
         return self._bam_file
+    
 
     def __str__(self):
         return '\t'.join(map(str, [self.chrom1, self.breakStart1, self.breakEnd1, self.chrom2, self.breakStart2, self.breakEnd2, self.ID, self.score, self.strand1, self.strand2, self.queryStart1, self.queryEnd1, self.queryStart2, self.queryEnd2  , self.minNonOverlap, self.queryLength, self.qualScores, self.variant_type, self.unaccounted_for_sequence, self.event_length,self.chrom1+":"+self.breakEnd1 +"-" +self.breakStart2]))
@@ -344,15 +345,18 @@ class CNVrow(object):
         left_support, left_no_support = self._get_left_bp(slop, mapping_quality, duplication=duplication)
         right_support, right_no_support = self._get_right_bp(slop, mapping_quality, duplication=duplication)
         # Fisher's exact to ensure we are sampling both ends of the breakpoint
-        (GQ, GT)= gt_likelihoods.genotype_likelihoods(left_support + right_support, left_no_support + right_no_support)
+        (GQ, GT, SQ)= gt_likelihoods.genotype_likelihoods(left_support + right_support, left_no_support + right_no_support)
         self._GT = GT
         self._GQ = GQ
+	self._SQ = SQ
         self._LS = left_support
         self._LNS = left_no_support
         self._RS = right_support 
         self._RNS = right_no_support 
         self._S = left_support + right_support 
         self._NS = left_no_support + right_no_support 
+	self._AB = float(left_support + right_support)/float(left_support + right_support + left_no_support + right_no_support)
+	print("SQ = {0}, AB = {1}".format(SQ, self._AB))
         print("GQ = {0}, GT {1}, S {2}, NS {3}, EVENTID = {4}".format(GQ, GT, left_support + right_support, left_no_support + right_no_support, self._event_id))
         print("LS = {0}, LNS = {1}, RS = {2}, RNS = {3}".format(left_support, left_no_support, right_support, right_no_support))
 
@@ -381,7 +385,33 @@ class CNVrow(object):
     def NS(self):
         return self._NS
 
+    @property 
+    def AB(self):
+        return self._AB
+    @property
+    def SQ(self):
+        return self._SQ
 
+
+class CNVFromVCF(object):
+
+    def __init__(self, vcfs, bam_file, fasta_one, fasta_two, break_point_folder):
+        """
+            Create CNV object from CNV 
+        """
+        #def __init__(self, chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant_type, unaccounted_for_sequence, event_length, event_id, bam_file, r1, r2, break_point_folder):
+        self.input_rows = []
+        for ids, vcf_row in vcfs._vcf_dict.items():
+            print(ids)
+
+
+    def extract_windowed_bam_reads(self,i, slop=200):
+        self.input_rows[i].extract_windowed_reads(slop) 
+
+    def __len__(self):
+        """
+            Number of CNV events
+        """
 class CNVs(object):
 
     def __init__(self, cnv_input_file, bam_file,fasta_one,fasta_two, break_point_folder):
@@ -400,6 +430,14 @@ class CNVs(object):
                       cnv_input_row_split[12],cnv_input_row_split[13],cnv_input_row_split[14],cnv_input_row_split[15],
                       cnv_input_row_split[16],cnv_input_row_split[17],cnv_input_row_split[18],cnv_input_row_split[19],
                       cnv_input_row_split[20],bam_file,fasta_one,fasta_two, break_point_folder))
+#    def __init__(self, vcf):
+#        """
+#            Create CNV object from CNV 
+#        """
+#        #def __init__(self, chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant_type, unaccounted_for_sequence, event_length, event_id, bam_file, r1, r2, break_point_folder):
+#        print(vcf) 
+#
+
 
     def extract_windowed_bam_reads(self,i, slop=200):
         self.input_rows[i].extract_windowed_reads(slop) 

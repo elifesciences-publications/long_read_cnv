@@ -127,6 +127,8 @@ def _create_gt_string(cnv_row):
     gt_dict["RS"] = cnv_row.RS
     gt_dict["RNS"] = cnv_row.RNS
     gt_dict["GQ"] = cnv_row.GQ
+    gt_dict["SQ"] = cnv_row.SQ
+    gt_dict["AB"] = cnv_row.AB
     out_string = "" 
     length_of_info = len(gt_dict.values())
     for i, item in enumerate(gt_dict.items()):
@@ -158,7 +160,7 @@ def write_vcf_row(cnv_row, file_name):
         FILTER = "lowqual"
     QUAL = str(cnv_row.GQ)
     INFO_STRING = _create_info_string(cnv_row)
-    FORMAT="GT:S:NS:LS:LNS:RS:RNS:GQ"
+    FORMAT="GT:S:NS:LS:LNS:RS:RNS:GQ:SQ:AB"
     GT_STRING = _create_gt_string(cnv_row)
     print("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,FORMAT,GT_STRING]))
     file_name.write("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,FORMAT,GT_STRING]))

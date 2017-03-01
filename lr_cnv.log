@@ -1,0 +1,768 @@
+2017-02-28 18:32:24,353 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,353 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,353 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,354 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,354 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,354 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,355 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,355 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,355 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,356 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,356 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,356 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,357 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,357 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,357 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,358 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,358 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,358 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,358 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,359 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,359 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,359 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,359 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,360 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,360 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,360 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,360 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,361 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,361 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,361 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,362 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,362 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,362 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,363 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,363 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,364 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,364 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,365 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,365 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,366 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,366 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,366 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,367 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,367 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,367 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,368 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,368 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,368 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,378 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,378 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,378 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,378 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,378 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,378 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,379 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,379 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,379 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,379 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,379 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,379 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,379 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,379 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,379 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,379 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,379 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,379 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,380 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,380 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,380 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,380 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,380 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,380 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,380 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,380 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,380 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,380 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,380 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,380 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,381 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,381 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,381 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,381 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,381 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,381 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,381 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,381 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,381 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,381 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,381 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,381 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,381 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,382 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,382 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,382 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,382 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,382 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,395 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,395 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,395 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,396 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,396 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,396 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,396 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,396 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,396 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,397 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,397 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,397 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,398 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,398 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,398 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,399 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,399 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,399 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,400 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,400 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,400 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,401 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,401 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,401 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,402 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,402 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,402 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,403 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,403 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,403 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,404 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,404 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,404 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,405 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,405 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,405 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,406 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,406 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,406 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,407 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,407 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,407 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,408 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,408 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,408 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,409 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,409 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,409 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,423 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,423 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,423 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,423 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,423 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,423 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,424 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,424 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,424 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,424 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,424 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,424 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,425 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,425 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,425 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,426 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,426 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,426 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,427 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,427 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,427 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,428 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,428 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,428 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,429 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,429 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,429 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,430 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,430 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,430 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,431 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,431 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,431 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,432 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,432 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,432 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,433 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,433 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,433 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,434 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,434 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,434 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,435 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,435 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,435 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,436 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,436 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,436 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,447 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,447 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,447 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,447 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,447 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,447 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,448 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,448 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,448 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,448 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,448 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,448 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,448 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,449 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,449 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,449 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,449 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,449 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,449 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,449 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,449 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,450 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,450 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,450 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,450 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,450 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,450 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,450 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,450 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,450 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,451 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,451 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,451 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,451 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,451 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,451 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,451 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,451 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,452 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,452 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,452 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,452 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,452 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,452 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,452 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,452 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,453 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,453 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,465 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,465 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,465 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,466 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,466 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,466 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,466 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,466 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,466 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,467 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,467 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,467 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,468 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,468 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,468 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,469 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,469 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,469 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,470 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,470 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,470 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,471 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,471 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,471 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,472 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,472 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,472 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,473 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,473 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,473 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,474 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,474 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,474 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,475 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,475 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,475 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,476 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,476 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,476 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,477 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,477 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,477 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,478 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,478 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,478 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,479 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,479 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,479 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,492 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,493 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,493 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,493 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,493 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,493 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,494 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,494 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,494 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,494 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,494 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,494 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,495 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,495 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,495 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,495 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,495 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,496 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,496 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,496 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,496 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,497 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,497 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,497 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,498 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,498 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,498 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,499 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,499 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,499 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,500 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,500 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,500 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,500 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,501 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,501 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,501 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,501 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,502 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,502 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,502 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,502 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,503 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,503 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,503 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,504 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,504 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,504 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,517 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,517 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,517 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,518 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,518 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,518 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,518 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,518 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,518 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,519 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,519 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,519 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,519 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,519 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,519 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,520 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,520 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,520 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,520 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,521 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,521 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,521 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,521 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,522 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,522 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,522 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,522 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,523 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,523 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,523 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,524 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,524 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,524 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,525 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,525 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,525 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,525 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,526 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,526 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,526 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,526 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,526 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,527 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,527 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,527 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,528 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,528 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,528 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,541 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,541 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,541 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,541 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,542 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,542 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,542 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,542 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,542 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,542 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,543 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,543 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,543 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,543 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,543 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,544 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,544 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,544 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,545 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,545 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,545 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,546 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,546 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,546 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,547 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,547 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,547 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,547 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,547 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,548 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,548 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,548 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,548 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,549 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,549 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,549 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,550 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,550 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,550 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,551 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,551 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,551 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,552 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,552 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,552 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,553 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,553 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,553 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,565 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,565 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,565 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,565 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,565 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,565 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,566 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,566 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,566 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,566 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,566 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,566 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,567 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,567 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,567 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,567 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,567 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,567 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,568 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,568 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,568 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,569 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,569 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,569 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,570 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,570 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,570 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,570 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,571 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,571 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,571 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,571 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,572 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,572 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,572 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,572 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,573 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,573 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,573 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,574 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,574 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,574 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,575 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,575 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,575 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,575 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,575 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,576 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,587 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,587 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,588 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,588 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,588 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,588 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,588 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,588 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,589 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,589 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,589 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,589 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,589 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,589 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,589 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,590 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,590 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,590 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,591 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,591 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,591 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,592 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,592 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,592 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,592 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,592 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,593 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,593 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,593 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,593 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,594 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,594 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,594 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,595 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,595 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,595 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,596 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,596 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,596 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,596 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,596 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,596 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,597 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,597 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,597 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,598 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,598 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,598 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,610 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,610 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,610 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,610 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,610 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,610 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,611 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,611 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,611 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,611 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,611 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,611 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,611 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,611 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,612 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,612 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,612 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,612 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,612 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,612 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,612 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,613 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,613 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,613 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,613 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,613 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,613 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,613 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,614 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,614 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,614 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,614 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,614 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,615 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,615 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,615 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,615 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,615 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,615 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,616 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,616 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,616 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,617 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,617 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,617 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,617 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,617 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,617 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,630 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,630 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,630 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,631 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,631 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,631 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,631 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,631 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,631 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,632 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,632 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,632 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,633 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,633 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,633 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,634 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,634 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,634 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,634 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,635 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,635 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,635 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,635 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,636 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,636 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,636 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,636 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,637 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,637 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,637 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,638 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,638 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,638 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,639 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,639 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,639 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,640 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,640 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,640 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,641 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,641 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,641 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,642 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,642 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,642 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,643 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,643 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,643 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,655 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,655 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,655 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,656 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,656 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,656 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,656 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,656 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,656 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,656 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,657 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,657 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,657 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,657 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,657 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,657 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,657 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,658 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,658 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,658 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,658 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,659 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,659 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,659 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,659 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,659 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,659 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,660 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,660 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,660 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,661 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,661 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,661 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,662 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,662 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,662 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,662 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,663 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,663 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,663 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,663 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,663 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,664 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,664 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,664 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,664 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,664 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,665 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,677 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,677 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,677 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,678 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,678 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,678 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,678 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,678 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,678 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,678 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,678 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,679 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,679 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,679 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,679 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,679 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,679 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,679 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,680 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,680 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,680 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,680 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,680 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,680 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,681 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,681 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,681 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,681 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,681 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,681 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,682 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,682 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,682 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,683 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,683 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,683 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,683 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,684 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,684 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,684 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,684 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,684 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,685 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,685 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,685 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,685 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,685 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,685 [INFO ]  Running speedseq align on YPS163
+2017-02-28 18:32:24,697 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,697 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,697 [INFO ]  Running speedseq align on 273164xa
+2017-02-28 18:32:24,698 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,698 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,698 [INFO ]  Running speedseq align on BY
+2017-02-28 18:32:24,698 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,698 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,698 [INFO ]  Running speedseq align on CBS288A
+2017-02-28 18:32:24,699 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,699 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,699 [INFO ]  Running speedseq align on CLIB219x
+2017-02-28 18:32:24,699 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,699 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,699 [INFO ]  Running speedseq align on CLIB413a
+2017-02-28 18:32:24,700 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,700 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,700 [INFO ]  Running speedseq align on I10
+2017-02-28 18:32:24,701 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,701 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,701 [INFO ]  Running speedseq align on I14
+2017-02-28 18:32:24,702 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,702 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,702 [INFO ]  Running speedseq align on M22
+2017-02-28 18:32:24,702 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,702 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,702 [INFO ]  Running speedseq align on PW5a
+2017-02-28 18:32:24,703 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,703 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,703 [INFO ]  Running speedseq align on RM
+2017-02-28 18:32:24,704 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,704 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,704 [INFO ]  Running speedseq align on YJM145
+2017-02-28 18:32:24,704 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,704 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,705 [INFO ]  Running speedseq align on YJM454a
+2017-02-28 18:32:24,705 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,705 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,705 [INFO ]  Running speedseq align on YJM978x
+2017-02-28 18:32:24,706 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,706 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,706 [INFO ]  Running speedseq align on YJM981
+2017-02-28 18:32:24,707 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,707 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,707 [INFO ]  Running speedseq align on YPS1009
+2017-02-28 18:32:24,708 [INFO ]  Aligning reads using speedseq
+2017-02-28 18:32:24,708 [INFO ]  Indexing reference genome test.fa
+2017-02-28 18:32:24,708 [INFO ]  Running speedseq align on YPS163

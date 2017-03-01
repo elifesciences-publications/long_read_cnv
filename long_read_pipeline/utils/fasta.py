@@ -62,7 +62,7 @@ class FastaInput(object):
                 j+=1 
 
 
-def index_fasta(input_file, temp_dir):
+def index_fasta(input_file, temp_dir, skip=False):
     """
         Fastaq to fasta.
 

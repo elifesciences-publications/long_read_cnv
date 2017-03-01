@@ -21,7 +21,9 @@
 
 import subprocess
 import os
-from long_read_pipeline.utils import vcf
+from long_read_pipeline.utils import vcf, fasta
+from long_read_pipeline.cnv import cnv_calls 
+from long_read_pipeline.speedseq import align 
 import copy
 
 def _remove_last_line_from_string(s):
@@ -122,7 +124,33 @@ def _process_clustering(cluster_file,all_vcfs):
         vcf_row.set_format(FORMAT)
         print(vcf_row)
 
-def merge_cnvs(vcfs,temp_dir, cluster_merge_slop=0):
+def merge_cnvs_indiv(vcfs, temp_dir, output_directory, in_file):
+    """
+        Merge CNV individual
+    """
+    all_vcfs = {}
+    __vcf_sort__ ="vcf-sort {0} |  bgzip -c > {0}.gz && tabix -p vcf {0}.gz" 
+    basenames = [os.path.basename(x).split(".vcf")[0] for x in vcfs]
+    for j, vcf_f in enumerate(vcfs):
+        vcf_sort_command = __vcf_sort__.format(vcf_f)
+        subprocess.check_call(vcf_sort_command,shell=True)
+        all_vcfs[vcf_f] = vcf.VCFSimple(vcf_f + ".gz")
+            # This should give us an idea of what the variants are.
+        for i in range(len(cnvs)):
+            for sample in in_file:
+                # Have to align
+                break_point_folder = os.path.join(output_directory,basenames[j], "breakpoints")
+                align.align_reads(sample,temp_dir, "test.fa", skip=True)
+                #input_cnvs = (os.path.join(input_directory, sample.samples_name + ".cnv"))
+                # Index and create fastas from fastq.
+                fasta.index_fasta(sample, temp_dir, skip=True)
+                cnv_calls.CNVFromVCF(all_vcfs[vcf_f],sample.bam_file, sample.fasta_one, sample.fasta_two, break_point_folder)
+                cnvs = cnv_calls.CNVs(input_cnvs, sample.bam_file, sample.fasta_one, sample.fasta_two, break_point_folder)
+                # For each locus in the sample perform lookup mapping in every other cross using this
+                # samples breakpoint.
+
+
+def merge_cnvs_clusters(vcfs,temp_dir, output_directory, cluster_merge_slop=0):
     """
         Merge CNVs, first step is to cluster the putatively identical deletions and duplications using bedtools. Then make a master VCF file.  
     """

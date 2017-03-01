@@ -52,6 +52,8 @@ def genotype_likelihoods(supporting,  not_supporting):
     prior_s = [0.1,0.9]
     not_supporting = int(not_supporting)
     supporting = int(supporting)
+    #not_supporting = 1 
+    #supporting = 10 
     total_reads = not_supporting + supporting
     log_combo = _log_choose(total_reads, supporting)
     lp_ref = log_combo + supporting * math.log(prior_s[0],10) + not_supporting*math.log(1-prior_s[0], 10)
@@ -67,6 +69,10 @@ def genotype_likelihoods(supporting,  not_supporting):
     if gt_sum > 0:
         gt_sum_log = math.log(gt_sum, 10)
         GQ= abs(-10 * (gt_list[0] - gt_sum_log))
+      	if 1 - (10**gt_list[gt_idx] / 10**gt_sum_log) == 0:
+	    SQ = 200
+	else:
+	    SQ = abs(-10 * math.log(1 - (10**gt_list[gt_idx] / 10**gt_sum_log), 10))
         if GQ > 200:
             GQ = 200
         if lp_alt > lp_ref:
@@ -75,9 +81,12 @@ def genotype_likelihoods(supporting,  not_supporting):
         else:
             GT = 0
     else:
-        if gt_idx == 0:
-            GT = 0
-        else:
-            GT = 1
-        GQ = 0 
-    return(GQ, GT)
+	if lp_alt > lp_ref:
+	    GT = 1 
+	    GQ = 200
+	    SQ = 200 
+	else:
+	    GT = 0
+	    GQ = 0 
+	    SQ = 200 
+    return(GQ, GT, SQ)

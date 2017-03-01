@@ -77,6 +77,8 @@ def parse_args():
     merge_vcfs = subparsers.add_parser("mergevcfs", help="Merge VCFs")
     merge_vcfs.add_argument(dest="vcfs", nargs="*") 
     merge_vcfs.add_argument("-t", "--temp-working-dir", dest="temp_dir", help="working dir file", default="tmp_dir") 
+    merge_vcfs.add_argument("-o", "--output-directory", dest="output_directory", help="Output directory", default="out_dir") 
+    merge_vcfs.add_argument("-i", "--input-file", dest="input_file", help="Input file", required=True)
     merge_vcfs.set_defaults(func=merge_vcf_wrap)
     args = parser.parse_args()
     return args
@@ -103,7 +105,6 @@ def genotype_cnvs_wrap(args):
         input_cnvs = (os.path.join(args.input_directory, sample.samples_name + ".cnv"))
         # Index and create fastas from fastq.
         fasta.index_fasta(sample, args.temp_dir)
-        print(sample.bam_file)
         cnvs = cnv_calls.CNVs(input_cnvs, sample.bam_file, sample.fasta_one, sample.fasta_two, break_point_folder)
         for i in range(len(cnvs)):
             # Skip chromosome M for now.
@@ -122,7 +123,9 @@ def merge_vcf_wrap(args):
         Merge VCFS 
     """
     vcfs = args.vcfs
-    merge_cnvs.merge_cnvs(vcfs, args.temp_dir)
+    in_file = input_file.InputFile(args.input_file, args.output_directory)
+    #merge_cnvs.merge_cnvs_clusters(vcfs, args.temp_dir,args.output_directory)
+    merge_cnvs.merge_cnvs_indiv(vcfs, args.temp_dir,args.output_directory, in_file)
 
 def cnv_call_wrap(args):
     """
