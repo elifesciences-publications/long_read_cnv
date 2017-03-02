@@ -127,8 +127,8 @@ def _create_gt_string(cnv_row):
     gt_dict["RS"] = cnv_row.RS
     gt_dict["RNS"] = cnv_row.RNS
     gt_dict["GQ"] = cnv_row.GQ
-    gt_dict["SQ"] = cnv_row.SQ
     gt_dict["AB"] = cnv_row.AB
+    gt_dict["SQ"] = cnv_row.SQ
     out_string = "" 
     length_of_info = len(gt_dict.values())
     for i, item in enumerate(gt_dict.items()):
@@ -137,7 +137,6 @@ def _create_gt_string(cnv_row):
             out_string += value +":"
         else:
             out_string += value 
-    print(out_string)
     return out_string
 
 def write_vcf_row(cnv_row, file_name):
@@ -191,6 +190,21 @@ class VCFSimpleRow(object):
         self._GTSTRING = row_s[9]
         self._extra_rows = []
         self._row_count = 1
+        self._info_to_dict()
+
+    def _info_to_dict(self):
+        """
+            Info to dictionary
+        """ 
+        self._info_dict = {}
+        tmp_split_info = self.info.split(";")
+        for item in tmp_split_info:
+            item_s = item.split("=")
+            self._info_dict[item_s[0]] = item_s[1]
+
+    @property
+    def info_dict(self):
+        return self._info_dict
 
     def add_row(self,line):
         self._extra_rows.append(VCFSimpleRow(line))
@@ -265,7 +279,7 @@ class VCFSimple(object):
         Simple VCF object
     """
     def __init__(self,vcf):
-        self._vcf_dict={}
+        self._vcf_dict=collections.OrderedDict()
         self._vcf_header=""
         with gzip.open(vcf) as f:
             for line in f:

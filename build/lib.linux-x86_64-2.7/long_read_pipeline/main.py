@@ -109,7 +109,7 @@ def genotype_cnvs_wrap(args):
         for i in range(len(cnvs)):
             # Skip chromosome M for now.
             if cnvs.input_rows[i]._chrom1 != "chrM":
-                cnvs.extract_windowed_bam_reads(i)
+                print(sample.samples_name)
         # Write VCF file
         vcf_output = open(os.path.join(args.output_directory, sample.samples_name + ".vcf"),"w") 
         vcf.write_vcf_header(sample.samples_name, vcf_output)

@@ -112,7 +112,7 @@ class CNVrow(object):
         return self._breakEnd1
     @property 
     def breakEnd2(self):
-        return self.breakEnd2
+        return self._breakEnd2
     @property
     def event_id(self):
         return self._event_id
@@ -122,7 +122,7 @@ class CNVrow(object):
     
 
     def __str__(self):
-        return '\t'.join(map(str, [self.chrom1, self.breakStart1, self.breakEnd1, self.chrom2, self.breakStart2, self.breakEnd2, self.ID, self.score, self.strand1, self.strand2, self.queryStart1, self.queryEnd1, self.queryStart2, self.queryEnd2  , self.minNonOverlap, self.queryLength, self.qualScores, self.variant_type, self.unaccounted_for_sequence, self.event_length,self.chrom1+":"+self.breakEnd1 +"-" +self.breakStart2]))
+        return '\t'.join(map(str, [self.chrom, self.breakStart1, self.breakEnd1, self.chrom, self.breakStart2, self.breakEnd2, self.ID, self.score, self.strand1, self.strand2, self.queryStart1, self.queryEnd1, self.queryStart2, self.queryEnd2  , self.minNonOverlap, self.queryLength, self.qualScores, self.variant_type, self.unaccounted_for_sequence, self.event_length,self.chrom1+":"+self.breakEnd1 +"-" +self.breakStart2]))
 
     def _prob_mapq(self, mapq):
         """
@@ -189,6 +189,7 @@ class CNVrow(object):
             #    break_point = reads.reference_start  + (reads.query_length - read_split[1])
             #elif type_clip == 5:
             #    break_point = reads.reference_start  + (reads.query_length)
+            # Exact breakpoint
             break_point = reads.reference_start + reads.reference_length
             if break_point == breakStart1:
                 if reads.is_read1:
@@ -229,7 +230,7 @@ class CNVrow(object):
                 tmp_seq_read = item[0][:len(tmp_seq_brk)]
                 tmp_seq_brk = tmp_seq_brk[:len(tmp_seq_read)]
                 identity = waterman.water(tmp_seq_brk, tmp_seq_read)
-                if identity > 0.95:
+                if identity > 0.9:
                     supporting += self._prob_mapq(item[2])
                 else:
                     not_supporting += self._prob_mapq(item[2])
@@ -327,12 +328,18 @@ class CNVrow(object):
                 tmp_seq_read = item[0][:len(tmp_seq_brk)]
                 tmp_seq_brk = tmp_seq_brk[:len(tmp_seq_read)]
                 identity = waterman.water(tmp_seq_brk, tmp_seq_read)
-                if identity > 0.95:
+                if identity > 0.90:
                     supporting +=1
                 else:
                     not_supporting +=1
         return supporting, not_supporting
 
+    def extract_windowed_reads_new_bam(self, bam_file, slop, mapping_quality=20): 
+
+        tmp_bam_file = self._bam_file
+        self._bam_file = pysam.AlignmentFile(bam_file, "rb")
+        self.extract_windowed_reads(slop)
+        self._bam_file = tmp_bam_file 
 
     def extract_windowed_reads(self, slop, mapping_quality=20): 
         """
@@ -355,10 +362,13 @@ class CNVrow(object):
         self._RNS = right_no_support 
         self._S = left_support + right_support 
         self._NS = left_no_support + right_no_support 
-	self._AB = float(left_support + right_support)/float(left_support + right_support + left_no_support + right_no_support)
-	print("SQ = {0}, AB = {1}".format(SQ, self._AB))
-        print("GQ = {0}, GT {1}, S {2}, NS {3}, EVENTID = {4}".format(GQ, GT, left_support + right_support, left_no_support + right_no_support, self._event_id))
-        print("LS = {0}, LNS = {1}, RS = {2}, RNS = {3}".format(left_support, left_no_support, right_support, right_no_support))
+        if (self._S + self._NS) == 0:
+            self._AB = 0
+        else:
+	    self._AB = float(left_support + right_support)/float(left_support + right_support + left_no_support + right_no_support)
+        #print("GQ = {0}, GT {1}, S {2}, NS {3}, EVENTID = {4}".format(GQ, GT, left_support + right_support, left_no_support + right_no_support, self._event_id))
+	#print("SQ = {0}, AB = {1}".format(SQ, self._AB))
+        #print("LS = {0}, LNS = {1}, RS = {2}, RNS = {3}".format(left_support, left_no_support, right_support, right_no_support))
 
     @property 
     def GT(self):
@@ -402,16 +412,32 @@ class CNVFromVCF(object):
         #def __init__(self, chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant_type, unaccounted_for_sequence, event_length, event_id, bam_file, r1, r2, break_point_folder):
         self.input_rows = []
         for ids, vcf_row in vcfs._vcf_dict.items():
-            print(ids)
-
+            info_dict = (vcf_row.info_dict)
+            breakstart1 = info_dict["BREAKSTART1"] 
+            breakstart2 = info_dict["BREAKSTART2"] 
+            breakend1 = info_dict["BREAKEND1"] 
+            breakend2 = info_dict["BREAKEND2"] 
+            strand1 = info_dict["STRANDS"][0]
+            strand2 = info_dict["STRANDS"][1]
+            ids = vcf_row.ids.split("_")
+            ids = (ids[:3][0])
+            self.input_rows.append(CNVrow(vcf_row.chrom, breakstart1, breakend1,vcf_row.chrom,breakstart2,breakend2,".","",strand1,strand2,"","","","","","","",
+                                   info_dict["SVTYPE"],50,0,ids,bam_file, fasta_one, fasta_two, break_point_folder))
 
     def extract_windowed_bam_reads(self,i, slop=200):
         self.input_rows[i].extract_windowed_reads(slop) 
+    
+    def extract_windowed_bam_reads_other_samples(self,i , bam_file, slop=200):
+        """
+            Extract other samples
+        """
+        self.input_rows[i].extract_windowed_reads_new_bam(bam_file,slop)
 
     def __len__(self):
         """
             Number of CNV events
         """
+        return len(self.input_rows)
 class CNVs(object):
 
     def __init__(self, cnv_input_file, bam_file,fasta_one,fasta_two, break_point_folder):
