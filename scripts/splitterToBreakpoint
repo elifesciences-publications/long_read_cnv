@@ -32,7 +32,7 @@ class CNVOutput(object):
         self.event_id = self.chrom1+":"+self.breakEnd1 +"-" +self.breakStart2 + "_" + self.variant_type + "_" + str(i)
 
     def __str__(self):
-        return '\t'.join(map(str, [self.chrom1, self.breakStart1, self.breakEnd1, self.chrom2, self.breakStart2, self.breakEnd2, self.ID, self.score, self.strand1, self.strand2, self.queryStart1, self.queryEnd1, self.queryStart2, self.queryEnd2  , self.minNonOverlap, self.queryLength, self.qualScores, self.variant_type, self.unaccounted_for_sequence, self.event_length,self.chrom1+":"+self.breakEnd1 +"-" +self.breakStart2]))
+        return '\t'.join(map(str, [self.chrom1, self.breakStart1, self.breakEnd1, self.chrom2, self.breakStart2, self.breakEnd2, self.ID, self.score, self.strand1, self.strand2, self.queryStart1, self.queryEnd1, self.queryStart2, self.queryEnd2  , self.minNonOverlap, self.queryLength, self.qualScores, self.variant_type, self.unaccounted_for_sequence, self.event_length,self.event_id]))
 
 
 def _extract_breakpoints(region, output_prefix, slop=300, fasta_input_file="/Users/smilefreak/Programming/OpenSource/MyGitHub/long_read_pipeline/scripts/test/RM_scaffolds.fasta"):

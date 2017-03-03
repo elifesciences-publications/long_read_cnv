@@ -152,9 +152,11 @@ def merge_cnvs_indiv(vcfs, temp_dir, output_directory, in_file):
     basenames = [os.path.basename(x).split(".vcf")[0] for x in vcfs]
         # TODO fix format to update to using sample quality
     FORMAT="GT:S:NS:LS:LNS:RS:RNS:GQ:POS:EVENTID:FLAG:SQ"
+    vcf_outputs  = []
     for j, vcf_f in enumerate(vcfs):
         output_vcf = os.path.join(output_directory, "vcfs", basenames[j] + ".vcf")
         output_vcf_f = open(output_vcf, "w")
+        vcf_outputs.append(output_vcf)
         vcf_sort_command = __vcf_sort__.format(vcf_f)
         subprocess.check_call(vcf_sort_command,shell=True)
         all_vcfs[vcf_f] = vcf.VCFSimple(vcf_f + ".gz")
@@ -199,6 +201,10 @@ def merge_cnvs_indiv(vcfs, temp_dir, output_directory, in_file):
                 # samples breakpoint.
             output_vcf_f.write(str(tmp_vcf_row)+ "\n")
         output_vcf_f.close()
+    _create_master_vcf(output_vcfs, output_directory)
+
+def _create_master_vcf(output_vcfs, output_directory):
+    return None
 
 def merge_cnvs_clusters(vcfs,temp_dir, output_directory, cluster_merge_slop=0):
     """

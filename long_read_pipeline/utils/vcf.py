@@ -159,7 +159,7 @@ def write_vcf_row(cnv_row, file_name):
         FILTER = "lowqual"
     QUAL = str(cnv_row.GQ)
     INFO_STRING = _create_info_string(cnv_row)
-    FORMAT="GT:S:NS:LS:LNS:RS:RNS:GQ:SQ:AB"
+    FORMAT="GT:S:NS:LS:LNS:RS:RNS:GQ:AB:SQ"
     GT_STRING = _create_gt_string(cnv_row)
     print("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,FORMAT,GT_STRING]))
     file_name.write("\t".join([CHROM,POS,ID,REF,ALT,QUAL,FILTER,INFO_STRING,FORMAT,GT_STRING]))

@@ -220,7 +220,7 @@ class CNVrow(object):
         tmp_fasta2 = fasta.extract_reads(self._fasta_two, temp_out.name) 
         os.remove(temp_out.name)
         fasta_check = fasta.FastaInput(tmp_fasta1, tmp_fasta2, read_one_complement, read_two_complement, read_pos_r1, read_pos_r2,read1_pos_mapq, read2_pos_mapq)
-        with open(os.path.join(self._break_point_folder, self._event_id + "_" + self._variant_type + ".brk1.fasta")) as break_in:
+        with open(os.path.join(self._break_point_folder, self._event_id +  ".brk1.fasta")) as break_in:
             #with open(self._break_point_folder 
             break_in.readline()
             seq_break = break_in.readline().strip()
@@ -318,7 +318,7 @@ class CNVrow(object):
         tmp_fasta2 = fasta.extract_reads(self._fasta_two, temp_out.name) 
         #os.remove(temp_out.name)
         fasta_check = fasta.FastaInput(tmp_fasta1, tmp_fasta2, read_one_complement, read_two_complement, read_pos_r1, read_pos_r2,read1_pos_mapq, read2_pos_mapq)
-        with open(os.path.join(self._break_point_folder, self._event_id + "_" + self._variant_type + ".brk2.fasta")) as break_in:
+        with open(os.path.join(self._break_point_folder, self._event_id + ".brk2.fasta")) as break_in:
         #with open(self._break_point_folder 
             break_in.readline()
             seq_break = break_in.readline().strip()
@@ -366,9 +366,9 @@ class CNVrow(object):
             self._AB = 0
         else:
 	    self._AB = float(left_support + right_support)/float(left_support + right_support + left_no_support + right_no_support)
-        #print("GQ = {0}, GT {1}, S {2}, NS {3}, EVENTID = {4}".format(GQ, GT, left_support + right_support, left_no_support + right_no_support, self._event_id))
-	#print("SQ = {0}, AB = {1}".format(SQ, self._AB))
-        #print("LS = {0}, LNS = {1}, RS = {2}, RNS = {3}".format(left_support, left_no_support, right_support, right_no_support))
+        print("GQ = {0}, GT {1}, S {2}, NS {3}, EVENTID = {4}".format(GQ, GT, left_support + right_support, left_no_support + right_no_support, self._event_id))
+	print("SQ = {0}, AB = {1}".format(SQ, self._AB))
+        print("LS = {0}, LNS = {1}, RS = {2}, RNS = {3}".format(left_support, left_no_support, right_support, right_no_support))
 
     @property 
     def GT(self):

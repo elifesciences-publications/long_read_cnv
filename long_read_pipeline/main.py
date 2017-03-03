@@ -108,13 +108,13 @@ def genotype_cnvs_wrap(args):
         cnvs = cnv_calls.CNVs(input_cnvs, sample.bam_file, sample.fasta_one, sample.fasta_two, break_point_folder)
         for i in range(len(cnvs)):
             # Skip chromosome M for now.
-            if cnvs.input_rows[i]._chrom1 != "chrM":
-                print(sample.samples_name)
+            if cnvs.input_rows[i]._chrom1 != "chrM" and cnvs.input_rows[i]._variant_type != "misaligned_sv":
+                cnvs.extract_windowed_bam_reads(i)
         # Write VCF file
         vcf_output = open(os.path.join(args.output_directory, sample.samples_name + ".vcf"),"w") 
         vcf.write_vcf_header(sample.samples_name, vcf_output)
         for i in range(len(cnvs)):
-            if cnvs.input_rows[i]._chrom1 != "chrM":
+            if cnvs.input_rows[i]._chrom1 != "chrM" and cnvs.input_rows[i]._variant_type != "misaligned_sv":
                 vcf.write_vcf_row(cnvs.input_rows[i], vcf_output) 
             
 
