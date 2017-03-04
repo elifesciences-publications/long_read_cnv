@@ -18,15 +18,7 @@
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
-from long_read_pipeline.config import *
-import os
-import subprocess
+import logging
 
-def call_cnvs(input_file, mapping_quality, bam_file, output_directory, fasta_reference):
-    """
-       Call CNVS questions 
-    """
-    cnv_output_script = os.path.join(output_directory, input_file.samples_name) 
-    cnv_analysis_script = "samtools view -q {0} -S {1} | " + SPLITREADBEDTOPE + " -i stdin | grep -v telo | " +SPLITTERTOBREAKPOINT + " -i stdin -s 0 -r {2} -o {3}"
-    cnv_analysis_script =  cnv_analysis_script.format(mapping_quality, bam_file, fasta_reference, cnv_output_script) 
-    subprocess.check_call(cnv_analysis_script,shell=True) 
+def genotype(input_file, temp_dir, reference_file):
+    return None
