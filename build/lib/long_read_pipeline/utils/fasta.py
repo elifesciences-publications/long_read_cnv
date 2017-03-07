@@ -62,7 +62,7 @@ class FastaInput(object):
                 j+=1 
 
 
-def index_fasta(input_file, temp_dir):
+def index_fasta(input_file, temp_dir, skip=False):
     """
         Fastaq to fasta.
 
@@ -70,10 +70,10 @@ def index_fasta(input_file, temp_dir):
 
         Then index these files with cdyank 
     """
-    zsed_conversion = "gzcat {0} | gsed -n '1~4s/^@/>/p;2~4p' > {1} "
-    sed_conversion = "cat {0} | gsed -n '1~4s/^@/>/p;2~4p' > {1} "
-    zsed_conversion_a= "gzcat {0} | gsed -n '1~4s/^@/>/p;2~4p' >> {1} "
-    sed_conversion_a = "cat {0} | gsed -n '1~4s/^@/>/p;2~4p' >> {1} "
+    zsed_conversion = "zcat {0} | sed -n '1~4s/^@/>/p;2~4p' > {1} "
+    sed_conversion = "cat {0} | sed -n '1~4s/^@/>/p;2~4p' > {1} "
+    zsed_conversion_a= "zcat {0} | sed -n '1~4s/^@/>/p;2~4p' >> {1} "
+    sed_conversion_a = "cat {0} | sed -n '1~4s/^@/>/p;2~4p' >> {1} "
     cdbfasta = "cdbfasta {0}" 
     sed_conversion = "cat {0} > {1}"
     for i, pairs in enumerate(input_file.paired_end_list):
@@ -95,10 +95,11 @@ def index_fasta(input_file, temp_dir):
         else:
             if ".gz" in p1:
                 p1_out =  os.path.join(temp_dir, os.path.basename(p1.split('.gz')[0])) + ".fasta"
+                #print(p1_out)
                 #subprocess.check_call(zsed_conversion.format(p1, p1_out), shell=True)
             else:
                 p1_out =  os.path.join(temp_dir, os.path.splitext(p1)[0]) + ".fasta"
-                subprocess.check_call(sed_conversion.format(p1, p1_out),shell=True)
+                #subprocess.check_call(sed_conversion.format(p1, p1_out),shell=True)
             if ".gz" in p2:
                 p2_out =  os.path.join(temp_dir, os.path.basename(p2.split('.gz')[0])) + ".fasta"
                 #subprocess.check_call(zsed_conversion.format(p2, p2_out),shell=True)
