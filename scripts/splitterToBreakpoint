@@ -44,13 +44,15 @@ def _extract_breakpoints(region, output_prefix, slop=300, fasta_input_file="/Use
     dirname = os.path.dirname(output_prefix)
     base_name_file = os.path.basename(fasta_input_file).split(".")[0]
     dirname = os.path.join(dirname, base_name_file) 
+    reference = pysam.Fastafile("/data/james/assembly_alignment/pipeline_run/input_data/BY.fasta")
+    ref_fasta = reference.fetch(region=region.chrom1)
     try:
         os.makedirs(os.path.join(dirname,"breakpoints"))
     except OSError:
         pass 
     with open(os.path.join(dirname,"breakpoints",region.event_id + ".brk1.fasta"), "w") as brk1_f:
         with open(os.path.join(dirname,"breakpoints",region.event_id + ".brk2.fasta"), "w") as brk2_f: 
-            header = ">" + region.event_id  
+            header =  region.event_id  
             seq = ""
             if region.strand1 == region.strand2: 
                 start_read = region.queryEnd1  
@@ -66,7 +68,10 @@ def _extract_breakpoints(region, output_prefix, slop=300, fasta_input_file="/Use
                         h2 = "_" + region.chrom1+":"+str(int(region.breakStart1)-slop + 1) +"-" + str(int(region.breakStart1)+slop) + "_strand_" + region.strand1 
                     else: 
                         h1 = "_" +region.chrom1 +":"+str(int(region.breakStart1)-slop+ 1 ) +"-" + str(int(region.breakStart1)+slop) + "_strand_" + region.strand1 
-                        h2 = "_" + region.chrom1+":"+str(int(region.breakStart2)-slop+ 1) +"-" + str(int(region.breakStart2)+slop) + "_strand_" + region.strand1 
+                        h2 = "_" + region.chrom1+":"+str(int(region.breakStart2)-slop+ 1) +"-" + str(int(region.breakStart2)+slop) + "_strand_" + region.strand1            
+                    if "deletion" in region.variant_type:
+                        if int(region.unaccounted_for_sequence) < 1:
+                            return
                     if int(end_read) - slop < 0:
                         end_idx = 0 
                         end_slop = slop - (slop - int(end_read)) 
@@ -118,20 +123,27 @@ def _extract_breakpoints(region, output_prefix, slop=300, fasta_input_file="/Use
                         seq2 = complement(seq2)
                    #print(seq)
                 # deal with inversions next
-                brk1_f.write(header + h1 +"\n"+ seq1 + "\n") 
-                brk2_f.write(header + h2 +"\n"+ seq2 + "\n") 
-                brk1_f.write(header + h1 +"\n"+ seq1[:start_slop] + "\n") 
-                brk2_f.write(header + h2 +"\n"+ seq2[:end_slop] + "\n") 
-                brk1_f.write(header + h1 +"\n"+ seq1[start_slop:] + "\n") 
-                brk2_f.write(header + h2 +"\n"+ seq2[end_slop:]+ "\n") 
+                brk1_f.write(">BRK1_" + header + h1 +"\n"+ seq1 + "\n") 
+                brk2_f.write(">BRK2_" +  header + h2 +"\n"+ seq2 + "\n") 
+                brk1_f.write(">"+header + h1 +"\n"+ seq1[:start_slop] + "\n") 
+                brk2_f.write(">"+ header + h2 +"\n"+ seq2[:end_slop] + "\n") 
+                brk1_f.write(">"+header + h1 +"\n"+ seq1[start_slop:] + "\n") 
+                brk2_f.write(">"+header + h2 +"\n"+ seq2[end_slop:]+ "\n")
+                # TODO: move messy code.
+                if "deletion" in region.variant_type: 
+                    with open(os.path.join(dirname,"event_fastas",region.event_id + ".deletion.fasta"), "w") as deletion_fasta:
+                        deletion_fasta.write(">"+header + h1 + "\n" + ref_fasta[int(region.breakStart1):int(region.breakEnd2)]+"\n") 
             elif region.strand1 != region.strand2:
                 start_read = region.queryEnd1
                 end_read = region.queryStart2
-                if end_read > start_read:
+                #print(region)
+                #print("Inversion")
+                #print(start_read)
+                #print(end_read)
+                if end_read < start_read:
                     h1 = "_" +region.chrom1 +":"+str(int(region.breakStart1)-slop+ 1) +"-" + str(int(region.breakStart1)+slop) + "_strand1_" + region.strand1 +"_strand2_"+ region.strand2
                     h2 = "_" +region.chrom1 +":"+str(int(region.breakStart2)-slop+ 1) +"-" + str(int(region.breakStart2)+slop) + "_strand1_" + region.strand1 +"_strand2_"+ region.strand2
-                else:
-                    pass
+                    print(h1)
 
 def complement(sequence):
     sequence_updated = []    
@@ -158,42 +170,61 @@ def processFasta(region, output_prefix, fasta_input_file="/Users/smilefreak/Prog
     dirname = os.path.dirname(output_prefix)
     base_name_file = os.path.basename(fasta_input_file).split(".")[0]
     dirname = os.path.join(dirname, base_name_file)
+    reference = pysam.Fastafile("/data/james/assembly_alignment/pipeline_run/input_data/BY.fasta")
+    ref_fasta = reference.fetch(region=region.chrom1)
     try:
         os.makedirs(os.path.join(dirname,"event_fastas"))
     except OSError:
         pass
-    with open(os.path.join(dirname,"event_fastas",region.event_id + ".fasta"), "w") as out_f:
-        header = ">" + region.event_id  +"\n"
-        seq = ""
-        if region.strand1 == region.strand2: 
-            start_read = region.queryEnd1  
-            end_read = region.queryStart2
-            if "duplication" in region.variant_type: 
-                end_read = end_read + region.event_length
-            if end_read > start_read:
-                #
-                # must be [   DUP    ]------[    DUP      ]
-                #
-                # We must have duplication situation, so just extract the sequence
-                # Could be no insertion.
-                seq = seq_fastq[start_read:end_read]
-                #print(seq)
-                if region.strand1 == "-":
-                    seq = complement(seq)
-                #print(seq)
-            else:
-                #
-                # must be [  DUP  ] 
-                #               [  DUP  ] 
-                # We must have some lost sequence relative to the reference, so we should just extract that sequence
-                seq = seq_fastq[end_read:start_read]
-                #print(seq)
-                if region.strand1 == "-":
-                    seq = complement(seq)
-                #print(seq)
-           # print(region.strand1)
-            #print(region.strand1)
-        out_f.write(header + seq + "\n") 
+    try:
+        os.makedirs(os.path.join(dirname,"event_fastas", "novel"))
+    except OSError:
+        pass
+    try:
+        os.makedirs(os.path.join(dirname,"event_fastas", "reference"))
+    except OSError:
+        pass
+    with open(os.path.join(dirname,"event_fastas","novel",region.event_id + ".fasta"), "w") as out_f1:
+        with open(os.path.join(dirname,"event_fastas","reference",region.event_id + ".fasta"), "w") as out_f2:
+            header = ">" + region.event_id  +"\n"
+            seq = ""
+            if region.strand1 == region.strand2: 
+                start_read = region.queryEnd1  
+                end_read = region.queryStart2
+                    # TODO: not ideal.
+                if end_read > start_read:
+                    #
+                    # must be [   DUP    ]------[    DUP      ]
+                    #
+                    # We must have duplication situation, so just extract the sequence
+                    # Could be no insertion.
+                    seq = seq_fastq[start_read:end_read]
+                    #print(seq)
+                    if region.strand1 == "-":
+                        seq = complement(seq)
+                    #print(seq)
+                else:
+                    #
+                    # must be [  DUP  ] 
+                    #               [  DUP  ] 
+                    # We must have some lost sequence relative to the reference, so we should just extract that sequence
+                    seq = seq_fastq[end_read:start_read]
+                    #print(seq)
+                    if region.strand1 == "-":
+                        seq = complement(seq)
+                    #print(seq)
+               # print(region.strand1)
+            #if "duplication" in region.variant_type:
+            out_f2.write(header + ref_fasta[int(region.breakStart1):int(region.breakEnd2)]+"\n") 
+            #else:
+            #    out_f2.write(">"+header + h1 + "\n" + ref_fasta[int(region.breakStart1):int(region.breakEnd2)]+"\n") 
+                #print(region.strand1)
+
+            if int(region.unaccounted_for_sequence) > 0:
+                out_f1.write(header + seq + "\n")
+            else: 
+                out_f1.close()
+                os.remove(os.path.join(dirname,"event_fastas","novel",region.event_id + ".fasta"))
 
 def splitterToBreakpoint(contigFile,splitReadSlop,localRange, reference_genome, output_prefix):
 #Define whether event is inv, del, or dup (classifying translocations as if they were local intrachromosomal events)
@@ -207,7 +238,7 @@ def splitterToBreakpoint(contigFile,splitReadSlop,localRange, reference_genome, 
     inversion_out.write(header)
     cnv_out.write(header)
     for i, line in enumerate(contigs):
-        split = line.split()     
+        split = line.split()    
         if (split[0] > split[3]): 
             chrom1 = split[3]
             start1 = int(split[4])
@@ -260,7 +291,7 @@ def splitterToBreakpoint(contigFile,splitReadSlop,localRange, reference_genome, 
         #
         #          
         if strand1 != strand2: #Classifying Inversions
-            if chrom1  == chrom2 and abs(end2 - start1) <= localRange:
+            if chrom1  == chrom2 and abs(end2 - start1): 
                 variant = "local_inversion"
                 variant_type = "inversion"
             else:
@@ -331,15 +362,15 @@ def splitterToBreakpoint(contigFile,splitReadSlop,localRange, reference_genome, 
         # When an end takes its coordinate from a start, add one.       
         if variant == "local_inversion" or variant == "distant_inversion":
             if ((queryStart1 < queryStart2) and (strand1 == "-") and (strand2 == "+")) or ((queryStart1 > queryStart2) and (strand1 == "+") and (strand2 == "-")):
-                breakStart1 = str(start1-splitReadSlop)
-                breakEnd1 = str(start1+1+splitReadSlop)
-                breakStart2 = str(start2-splitReadSlop) 
-                breakEnd2 = str(start2+1+splitReadSlop)
+                breakStart1 = str(start2-splitReadSlop)
+                breakEnd1 = str(start2+1+splitReadSlop)
+                breakStart2 = str(start1-splitReadSlop) 
+                breakEnd2 = str(start1+1+splitReadSlop)
             elif ((queryStart1 < queryStart2) and (strand1 == "+") and (strand2 == "-")) or ((queryStart1 > queryStart2) and (strand1 == "-") and (strand2 == "+")):
-                breakStart1 = str(end1-1-splitReadSlop)
-                breakEnd1 = str(end1+splitReadSlop)
-                breakStart2 = str(end2-1-splitReadSlop)
-                breakEnd2 = str(end2+splitReadSlop)
+                breakStart1 = str(end2-1-splitReadSlop)
+                breakEnd1 = str(end2+splitReadSlop)
+                breakStart2 = str(end1-1-splitReadSlop)
+                breakEnd2 = str(end1+splitReadSlop)
         elif variant_type == "complex_deletion" or variant_type == "simple_deletion":
             if(strand1 == "+"):
                 breakStart1 = str(end1-splitReadSlop)
@@ -368,14 +399,15 @@ def splitterToBreakpoint(contigFile,splitReadSlop,localRange, reference_genome, 
                 breakEnd2 = str(end2+1+splitReadSlop)
         else:
             print "ERROR: " + ID + " is lost in breakpoint locus prediction step. Contact Mitchell"
-        cnv_output = CNVOutput(chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant, variant_type, unaccounted_for_sequence, event_length, i)
-        processFasta(cnv_output, fasta_input_file=reference_genome, output_prefix=output_prefix)
-        _extract_breakpoints(cnv_output, fasta_input_file=reference_genome, output_prefix=output_prefix)
-        # For now ignore inversions
-        if variant_type != "inversion":
-            cnv_out.write(str(cnv_output) +"\n")
-        elif variant_type == "inversion":
-            inversion_out.write(str(cnv_output) + "\n")
+        if chrom1 == chrom2:
+            cnv_output = CNVOutput(chrom1, breakStart1, breakEnd1, chrom2, breakStart2, breakEnd2, ID, score, strand1, strand2, queryStart1, queryEnd1, queryStart2, queryEnd2, minNonOverlap, queryLength, qualScores, variant, variant_type, unaccounted_for_sequence, event_length, i)
+            processFasta(cnv_output, fasta_input_file=reference_genome, output_prefix=output_prefix)
+            _extract_breakpoints(cnv_output, fasta_input_file=reference_genome, output_prefix=output_prefix)
+            # For now ignore inversions
+            if variant_type != "inversion":
+                cnv_out.write(str(cnv_output) +"\n")
+            elif variant_type == "inversion":
+                inversion_out.write(str(cnv_output) + "\n")
     inversion_out.close()
     cnv_out.close()
 

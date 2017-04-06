@@ -41,15 +41,17 @@ def _log_choose(n,k):
     return r
 
 
-def genotype_likelihoods(supporting,  not_supporting):
+def genotype_likelihoods(supporting,  not_supporting, duplication=False):
     """
         Get the likelihoods for the reads using counts of alternate and non-alternate bases.
 
         @author James Boocock
         @date 8 Feb 2017
     """
-
-    prior_s = [0.1,0.9]
+    if duplication:
+        prior_s = [0.1,0.5]
+    else:
+        prior_s = [0.1,0.9]
     not_supporting = int(not_supporting)
     supporting = int(supporting)
     #not_supporting = 1 

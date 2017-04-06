@@ -1,6 +1,7 @@
 #!/usr/bin/python2.7
 # -*- Mode: Python -*-
 
+import pysam
 import sys
 from optparse import OptionParser
 import re
@@ -115,19 +116,34 @@ def processSam(opts):
     blockList = []
     prevSam = SAM()
     inBlock = 0
+    prefix_out = opts.prefix + "_telomeres.txt"
+    out_f = open(prefix_out, "w")
+    chrom = ""
     for line in s:
         if line[0] == "@":
             continue
         samList = line.strip().split('\t')
         currSam = SAM(samList)
+        currSam.extractCigarOps()
+        mapped_length = mappedLength(currSam.cigarOps)
+        if mapped_length < 500:
+            continue
         if currSam.query != prevSam.query:
             makeBedpe(blockList, opts)
             blockList = [currSam]
             prevSam = currSam
         else:
             blockList.append(currSam)
+        if chrom != currSam.ref: 
+            if chrom != "":
+                # Generate for each chromosome the split
+                outputBed_Tel(prev_row, out_f,start=False, output_prefix=prefix_out) 
+            chrom = currSam.ref 
+            outputBed_Tel(currSam,out_f,start=True,output_prefix=prefix_out) 
+        prev_row = currSam 
     # Need to process the last block at end of file.
     makeBedpe(blockList, opts)
+    out_f.close()
 
 
 def calcOverlap(bed1, bed2):
@@ -179,13 +195,36 @@ def checkforSplitAtStart(cigarOps, start=True):
         return cigar.length
     else:
         return None
-def outputBed_Tel(read_info,out_f,start=True):
+
+def mappedLength(cigarOps): 
+    read_length = 0
+    for cigar in cigarOps:
+        if cigar.op == "M":
+            read_length += cigar.length
+        elif cigar.op == "D":
+            read_length += cigar.length
+    return read_length
+
+def get_Tel_seq(read_info, cigarOps, start=True): 
+    read_length = 0
+    print(cigarOps[0].length)
+
+def outputBed_Tel(read_info,out_f, output_prefix ,start=True):
     """
         Extract split bed file with some telomere information.
     """
-    cigar_string = read_info[10]
+    cigar_string = read_info.cigar
     cigarOpStrings = cigarSearch.findall(cigar_string)
     cigarOps = []
+    sample_name = os.path.basename(output_prefix)
+    sample_name = (sample_name.split("_")[0])
+    output_directory = os.path.dirname(output_prefix)
+    telomere_folder = os.path.join(output_directory,sample_name, "event_fastas","telomeres")
+    sequences_fasta = pysam.Fastafile(os.path.join(output_directory, sample_name +".fasta"))
+    try:
+        os.makedirs(telomere_folder)
+    except OSError:
+        pass
     for opString in cigarOpStrings:
         cigarOpList = atomicCigarSearch.findall(opString)
         # "struct" for the op and it's length
@@ -196,29 +235,52 @@ def outputBed_Tel(read_info,out_f,start=True):
     if not start:
         cigarOps.reverse()
     how_much_split = checkforSplitAtStart(cigarOps, start=start)
+    map_length = (mappedLength(cigarOps))
+    if map_length < 10000:
+        return 
     if how_much_split is not None:
-        chrom =  read_info[0] 
-        idx = read_info[3]
-        strand = read_info[4]
-        event_id = "telomere_deletion"
+        if how_much_split < 500:
+            return
+        # TODO BLAST 
+        chrom =  read_info.ref
+        idx = 1 
+        strand = read_info.isReverseStrand()
+        seq_fasta = sequences_fasta.fetch(region=read_info.query)
+        if (strand):
+            strand = "-"
+        else:
+            strand = "+"
+        event_id = "telomeric_sv"
         if start == True:
             br1 = 0
-            br2 = read_info[1]
-            start_read = 1
+            br2 = read_info.pos
+            start_read = 0
             end_read = how_much_split
             deletion_id = chrom + ":" + "1-" + str(br2)
-            out_string = "\t".join(map(str,[chrom, br1,br1+1, chrom,br2,br2+1, strand, start_read, end_read, event_id, deletion_id,idx])) 
+            out_string = "\t".join(map(str,[chrom, br1,br1+1, chrom,br2,br2+1, read_info.query, strand, start_read, end_read, end_read - start_read, event_id, deletion_id])) 
+            with open(os.path.join(telomere_folder,deletion_id + "_" + event_id + ".fasta"),"w") as fasta_out:
+                header = ">" + deletion_id +"_"+event_id +"\n"
+                fasta_out.write(header + seq_fasta[:how_much_split] +"\n")
             #read_info
             #print(out_string)
         else:
             br2 = "END" 
             # END of chromosome
-            br1 = read_info[2]
+            br1 = read_info.pos + map_length 
             start_read = br1
             end_read = how_much_split
+            idx_end = len(seq_fasta) - how_much_split
+            idx_end = idx_end 
             deletion_id = chrom + ":" + str(br1) +"-END" 
-            out_string = "\t".join(map(str,[chrom, br1,int(br1)+1, chrom,br2,br2, strand, int(br1) + 1, int(br1) +how_much_split, event_id, deletion_id,idx])) 
+            out_string = "\t".join(map(str,[chrom, br1,int(br1)+1, chrom,br2,br2, strand, int(br1) + 1, int(br1) + how_much_split, how_much_split,  event_id, deletion_id])) 
+            #with open(os.path.join(telomere_folder,deletion_id + "_" + event_id + ".fasta")) as fasta_out:
+            with open(os.path.join(telomere_folder,deletion_id + "_" + event_id + ".fasta"),"w") as fasta_out:
+                header = ">" + deletion_id +"_"+event_id +"\n"
+                fasta_out.write(header + seq_fasta[(idx_end):] +"\n")
+                #header = ">" + deletion_id +"_"+event_id +"\n"
+                #fasta_out.write(read_info.seq[:how_much_split] +"\n")
             #print(out_string)
+        out_f.write(out_string + "\n")
     #check_for_split()
     #query = calcQueryPosFromCigar(blockList[i].cigarOps)
 
@@ -266,7 +328,6 @@ def makeBedpe(blockList, opts):
         if (maxOverlap > 0):
             pBedBlock[maxJvalue].append(sBedBlock[i])
     # Now output all pairs from adjoining similarity sets.
-    out_f = open("telomeres.txt","a")
     for i in xrange(len(pBedBlock)-1):
         set1 = pBedBlock[i]
         duplicate_alignments = []
@@ -274,7 +335,6 @@ def makeBedpe(blockList, opts):
             set2 = pBedBlock[j];
             # We need to check for the "span" feature.
             # Let the adjacent ones goes through unmolested.
-
             p1 = set1[0];
             p2 = set2[0];
             # sys.stderr.write(str(p1[6]) + ' ' + str(p2[5]) + '\n');
@@ -291,17 +351,10 @@ def makeBedpe(blockList, opts):
                # print opts.span
                 #print "breaking"
                 break;
-            if (i == 0 and j == (i+1)):
-                # Check for a telomeric 5' deletion, this assumes the read aligns to the entire chromosome in some cases it will in some
-                # it won't
-                # Heuristic to check whether we have something near the end or start of the chromosome.
-                outputBed_Tel(set1[0],out_f,start=True)  
 
             for ii in xrange(len(set1)):
                 for jj in xrange(len(set2)):
                     outputBedpe(set1[ii], set2[jj], opts)
-    outputBed_Tel(pBedBlock[i+1][0],out_f,start=False)  
-    out_f.close()
     # Check for telomeric 3' deletion.
 
 def calcRefPosFromCigar(cigarOps, alignmentStart):
@@ -317,6 +370,7 @@ def calcRefPosFromCigar(cigarOps, alignmentStart):
             raise ValueError('Unexpected Cigar Operation')
     d = refPos(rPos)
     return d
+
 
 def calcQueryPosFromCigar(cigarOps):
     qsPos = 0
@@ -370,10 +424,9 @@ Modified by GGF on March 27, 2012 to add span parameter.
     parser.add_option("-i", dest="samFile", help="sam filename sorted by read id (not enforced), or standard input (-i stdin)", metavar="FILE")
     parser.add_option("-m", dest="MNO", help="minimum non-overlap to allow in output (default 25)", metavar="MNO", type="int", default=25);
     parser.add_option("-s", dest="span", help="maximum span to allow between reported pairs (default 0)", metavar="SPAN", type="int", default=0);
+    parser.add_option("-p", dest="prefix", help="Sample name used for outputting auxilary files", metavar="PREFIX", default="telomeres") 
     (opts, args) = parser.parse_args()
 
-    out_f = open("telomeres.txt","w")
-    out_f.close()
     if opts.samFile is None:
         parser.print_help()
         print

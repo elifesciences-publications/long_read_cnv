@@ -1,9 +1,0 @@
-chrXIII	512863	512867	chrXIII:512864-512867_complex_duplication	../out_dir/273164xa.vcf	126
-chrXIII	512863	512867	chrXIII:512864-512867_complex_duplication	../out_dir/CBS288A.vcf	126
-chrXIII	512863	512867	chrXIII:512864-512867_complex_duplication	../out_dir/CLIB219x.vcf	126
-chrXIII	512863	512867	chrXIII:512864-512867_complex_duplication	../out_dir/CLIB413a.vcf	126
-chrXIII	512863	512867	chrXIII:512864-512867_complex_duplication	../out_dir/M22.vcf	126
-chrXIII	512863	512867	chrXIII:512864-512867_complex_duplication	../out_dir/PW5a.vcf	126
-chrXIII	512863	512867	chrXIII:512864-512867_complex_duplication	../out_dir/YJM978x.vcf	126
-chrXIII	512863	512867	chrXIII:512864-512867_complex_duplication	../out_dir/YJM981.vcf	126
-chrXIII	512863	512867	chrXIII:512864-512867_complex_duplication	../out_dir/YPS1009.vcf	126

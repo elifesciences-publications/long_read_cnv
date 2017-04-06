@@ -17,9 +17,11 @@
 # COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER
 # IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN
 # CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
-
+import shutil
 import gzip
 import collections
+import glob
+import os
 
 default_vcf_header="""##fileformat=VCFv4.2
 ##source=LRCNV
@@ -139,14 +141,26 @@ def _create_gt_string(cnv_row):
             out_string += value 
     return out_string
 
-def write_vcf_row(cnv_row, file_name):
+def write_vcf_row(cnv_row, file_name,output_directory, sample_name):
     """
 
         Write vcf row for each CNV
     """
-
+    novel_dir_filtered = (os.path.join(output_directory, sample_name, "event_fastas","filtered","novel"))
+    reference_dir_filtered = (os.path.join(output_directory, sample_name, "event_fastas","filtered","reference"))
+    novel_dir = (os.path.join(output_directory, sample_name, "event_fastas","novel"))
+    reference_dir = (os.path.join(output_directory, sample_name, "event_fastas","reference"))
+    try:
+        os.makedirs(novel_dir_filtered)
+    except OSError:
+        pass
+    try:
+        os.makedirs(reference_dir_filtered)
+    except OSError:
+        pass
     CHROM = cnv_row.chrom
-    ID = cnv_row.event_id + "_" + cnv_row.variant_type
+    # TODO: fix
+    ID = cnv_row.event_id 
     # Position is breakStart1
     POS = str(cnv_row.breakStart1)
     REF = "."
@@ -155,6 +169,17 @@ def write_vcf_row(cnv_row, file_name):
     QUAL = float(cnv_row.GQ)
     if QUAL > 100:
         FILTER = "PASS"
+        # Lets copy the FASTA files for both the breakpoints and the novel sequence
+        # TODO: Fix hack to move folders
+        novel_fasta = (os.path.join(novel_dir, cnv_row.event_id +'.fasta'))
+        print(novel_fasta)
+        try:
+            shutil.copy(novel_fasta, os.path.join(novel_dir_filtered, os.path.basename(novel_fasta))) 
+        except IOError:
+            pass
+        reference_fasta = (os.path.join(reference_dir, cnv_row.event_id +'.fasta'))
+        print(reference_fasta)
+        shutil.copy(reference_fasta, os.path.join(reference_dir_filtered, os.path.basename(reference_fasta))) 
     else:
         FILTER = "lowqual"
     QUAL = str(cnv_row.GQ)
@@ -255,6 +280,9 @@ class VCFSimpleRow(object):
 
     def set_qual(self, qual):
         self._QUAL = int(qual)
+
+    def set_filter(self, filter_str):
+        self._FILTER = filter_str
 
     def set_format(self, FORMAT):
         self._FORMAT = FORMAT

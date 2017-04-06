@@ -80,9 +80,25 @@ def parse_args():
     merge_vcfs.add_argument("-o", "--output-directory", dest="output_directory", help="Output directory", default="out_dir") 
     merge_vcfs.add_argument("-i", "--input-file", dest="input_file", help="Input file", required=True)
     merge_vcfs.set_defaults(func=merge_vcf_wrap)
+
+    filtered_events_and_break_points = subparsers.add_parser("filter_breaks")
+    filtered_events_and_break_points.add_argument("-o", "--output-directory", dest="output_directory", help="Output directory", default="out_dir") 
+    filtered_events_and_break_points.add_argument("-i", "--input-file", dest="input_file", help="Input file", required=True)
+    filtered_events_and_break_points.set_defaults(func=filter_breaks)
+
+
     args = parser.parse_args()
     return args
 
+
+def filter_breaks(args):
+    """
+        Generates filtered breakpoints for downstream analysis. Ignores left and right here.
+    """
+    # TODO: Fix hack whereby I ignore the second argument I just want the inputfile in memory
+    in_file = input_file.InputFile(args.input_file, "") 
+    for sample in in_file:
+        print(sample) 
 
 def genotype_cnvs_wrap(args):
     """
@@ -115,7 +131,7 @@ def genotype_cnvs_wrap(args):
         vcf.write_vcf_header(sample.samples_name, vcf_output)
         for i in range(len(cnvs)):
             if cnvs.input_rows[i]._chrom1 != "chrM" and cnvs.input_rows[i]._variant_type != "misaligned_sv":
-                vcf.write_vcf_row(cnvs.input_rows[i], vcf_output) 
+                vcf.write_vcf_row(cnvs.input_rows[i], vcf_output, args.output_directory, sample.samples_name) 
             
 
 def merge_vcf_wrap(args):
@@ -124,8 +140,9 @@ def merge_vcf_wrap(args):
     """
     vcfs = args.vcfs
     in_file = input_file.InputFile(args.input_file, args.output_directory)
-    #merge_cnvs.merge_cnvs_clusters(vcfs, args.temp_dir,args.output_directory)
+    merge_cnvs.merge_cnvs_clusters(vcfs, args.temp_dir,args.output_directory)
     merge_cnvs.merge_cnvs_indiv(vcfs, args.temp_dir,args.output_directory, in_file)
+    #merge_cnvs.pairwise_cnvs(vcfs, args.temp_dir,args.output_directory, in_file)
 
 def cnv_call_wrap(args):
     """

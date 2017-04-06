@@ -27,6 +27,7 @@ def call_cnvs(input_file, mapping_quality, bam_file, output_directory, fasta_ref
        Call CNVS questions 
     """
     cnv_output_script = os.path.join(output_directory, input_file.samples_name) 
-    cnv_analysis_script = "samtools view -q {0} -S {1} | " + SPLITREADBEDTOPE + " -i stdin | grep -v telo | " +SPLITTERTOBREAKPOINT + " -i stdin -s 0 -r {2} -o {3}"
-    cnv_analysis_script =  cnv_analysis_script.format(mapping_quality, bam_file, fasta_reference, cnv_output_script) 
+    cnv_analysis_script = "samtools view -q {0} -S {1} | " + SPLITREADBEDTOPE + " -i stdin -p {2} | grep -v telo | " +SPLITTERTOBREAKPOINT + " -i stdin -s 0 -r {3} -o {4}"
+    cnv_analysis_script =  cnv_analysis_script.format(mapping_quality, bam_file, os.path.join(output_directory,input_file.samples_name), fasta_reference, cnv_output_script) 
+    print(cnv_analysis_script)
     subprocess.check_call(cnv_analysis_script,shell=True) 

@@ -140,7 +140,7 @@ class CNVrow(object):
         
         return None
 
-    def _get_left_bp(self, slop, mapping_quality, duplication=False, clip_size=5): 
+    def _get_left_bp(self, slop, mapping_quality, duplication=False, clip_size=5, add_slash=False, allow_slop=False): 
         """
             Get the left break point
         """
@@ -191,20 +191,34 @@ class CNVrow(object):
             #    break_point = reads.reference_start  + (reads.query_length)
             # Exact breakpoint
             break_point = reads.reference_start + reads.reference_length
-            if break_point == breakStart1:
+            max_slop_break = 10
+            break_point_match = False
+            if allow_slop:
+                if abs(breakStart1 - break_point) < 10: 
+                    break_point_match = True 
+            else:
+                if breakStart1 == break_point:
+                    break_point_match = True
+            if break_point_match: 
                 if reads.is_read1:
-                    read_one_list.append(reads.query_name)
+                    if add_slash:
+                        read_one_list.append(reads.query_name + "/1")
+                    else:
+                        read_one_list.append(reads.query_name)
                     read_one_complement.append(reads.is_reverse)
                     read_pos_r1.append(reads.reference_start) 
                     read1_pos_mapq.append(reads.mapping_quality)
                     #fasta.extract_reads(self._fasta_one, reads.query_name + "/1")
                 else:
-                    read_two_list.append(reads.query_name)
+                    if add_slash:
+                        read_two_list.append(reads.query_name + "/2")
+                    else:
+                        read_two_list.append(reads.query_name)
                     read_two_complement.append(reads.is_reverse)
                     read_pos_r2.append(reads.reference_start) 
                     read2_pos_mapq.append(reads.mapping_quality)
                     #fasta.extract_reads(self._fasta_two, reads.query_name +"/2")
-                #  Check for matches 
+                #  Check for matches
             elif break_point != breakStart1: 
                 not_supporting += self._prob_mapq(reads.mapping_quality)
         temp_out = tempfile.NamedTemporaryFile(delete=False) 
@@ -237,7 +251,7 @@ class CNVrow(object):
             #print(read_id)
         return supporting, not_supporting
 
-    def _get_right_bp(self, slop, mapping_quality, duplication=False, clip_size = 5):
+    def _get_right_bp(self, slop, mapping_quality, duplication=False, clip_size = 5, add_slash=False, allow_slop=False):
         """
             Get the right breakpoint 
         """
@@ -286,9 +300,19 @@ class CNVrow(object):
                 #print(reads)
                 #print(read_split)
                 break_point = reads.reference_start 
-            if break_point == break_point_tmp: 
+            break_point_match = False
+            if allow_slop:
+                if abs(break_point_tmp - break_point) < 10: 
+                    break_point_match = True 
+            else:
+                if break_point_tmp == break_point:
+                    break_point_match = True
+            if break_point_match: 
                 if reads.is_read1:
-                    read_one_list.append(reads.query_name)
+                    if add_slash:
+                        read_one_list.append(reads.query_name + "/1")
+                    else:
+                        read_one_list.append(reads.query_name)
                     read_one_complement.append(reads.is_reverse)
                     read_pos_r1.append(reads.reference_start - read_split[1])
                     #print("HERE")
@@ -296,7 +320,10 @@ class CNVrow(object):
                     read1_pos_mapq.append(reads.mapping_quality)
                     #fasta.extract_reads(self._fasta_one, reads.query_name + "/1")
                 else:
-                    read_two_list.append(reads.query_name)
+                    if add_slash:
+                        read_two_list.append(reads.query_name + "/2")
+                    else:
+                        read_two_list.append(reads.query_name)
                     read_two_complement.append(reads.is_reverse)
                     read_pos_r2.append(reads.reference_start - read_split[1]) 
                     read2_pos_mapq.append(reads.mapping_quality)
@@ -337,11 +364,12 @@ class CNVrow(object):
     def extract_windowed_reads_new_bam(self, bam_file, slop, mapping_quality=20): 
 
         tmp_bam_file = self._bam_file
+        bam_fname = bam_file
         self._bam_file = pysam.AlignmentFile(bam_file, "rb")
-        self.extract_windowed_reads(slop)
+        self.extract_windowed_reads(slop,tmp_bam_file=bam_fname, allow_slop=True)
         self._bam_file = tmp_bam_file 
 
-    def extract_windowed_reads(self, slop, mapping_quality=20): 
+    def extract_windowed_reads(self, slop, mapping_quality=20, add_slash=False, tmp_bam_file=None,allow_slop=False): 
         """
             Extract windowed reads for both R1 and R2.
         """
@@ -349,10 +377,17 @@ class CNVrow(object):
             duplication = True
         else:
             duplication = False
-        left_support, left_no_support = self._get_left_bp(slop, mapping_quality, duplication=duplication)
-        right_support, right_no_support = self._get_right_bp(slop, mapping_quality, duplication=duplication)
+        # hack 
+        if tmp_bam_file is not None:
+            sample = os.path.basename(tmp_bam_file).split(".")[0]
+        else:
+            sample = (os.path.dirname(self._break_point_folder).split("/")[len(os.path.dirname(self._break_point_folder).split("/"))-1])
+        if sample == "RMx" or sample == "BYa" or sample == "RM" or sample == "BY":
+            add_slash =True 
+        left_support, left_no_support = self._get_left_bp(slop, mapping_quality, duplication=duplication, add_slash=add_slash,allow_slop=allow_slop)
+        right_support, right_no_support = self._get_right_bp(slop, mapping_quality, duplication=duplication, add_slash=add_slash,allow_slop=allow_slop)
         # Fisher's exact to ensure we are sampling both ends of the breakpoint
-        (GQ, GT, SQ)= gt_likelihoods.genotype_likelihoods(left_support + right_support, left_no_support + right_no_support)
+        (GQ, GT, SQ)= gt_likelihoods.genotype_likelihoods(left_support + right_support, left_no_support + right_no_support, duplication)
         self._GT = GT
         self._GQ = GQ
 	self._SQ = SQ
@@ -419,8 +454,7 @@ class CNVFromVCF(object):
             breakend2 = info_dict["BREAKEND2"] 
             strand1 = info_dict["STRANDS"][0]
             strand2 = info_dict["STRANDS"][1]
-            ids = vcf_row.ids.split("_")
-            ids = (ids[:3][0])
+            ids = vcf_row.ids
             self.input_rows.append(CNVrow(vcf_row.chrom, breakstart1, breakend1,vcf_row.chrom,breakstart2,breakend2,".","",strand1,strand2,"","","","","","","",
                                    info_dict["SVTYPE"],50,0,ids,bam_file, fasta_one, fasta_two, break_point_folder))
 
