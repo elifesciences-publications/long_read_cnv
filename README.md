@@ -6,7 +6,7 @@ The long reads are used to uncover a set of putative CNVs, and then the short re
 
 Simplied version of the pipeline utilised a moleculo genome assembly is shown below.
 
-![alt tag](https://raw.githubusercontent.com/theboocock/long_read_cnv/img/LRCNV_pipeline.png)
+![alt tag](https://raw.githubusercontent.com/theboocock/long_read_cnv/master/img/LRCNV_pipeline.png)
  
 # Input file format for pilon running (tab or comma-delimited).
 
