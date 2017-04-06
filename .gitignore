@@ -3,3 +3,5 @@ src/*
 out_dir/*
 tmp_dir/*
 scirpts/*
+build/*
+dist/*

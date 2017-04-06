@@ -48,7 +48,8 @@ def align_reads(input_file, temp_dir, reference_genome, skip=False):
     if not os.path.isfile(reference_genome + ".pac"):
         bwa_command = BWA + " index " + reference_genome 
         logging.info("Indexing reference genome {0}".format(reference_genome))
-        subprocess.check_call(bwa_command,shell=True)
+        if not skip:
+            subprocess.check_call(bwa_command,shell=True)
     # Run speedseq align
     for pairs in input_file.paired_end_list:
         p1 = pairs[0]
