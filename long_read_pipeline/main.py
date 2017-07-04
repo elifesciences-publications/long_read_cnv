@@ -65,7 +65,7 @@ def parse_args():
     cnv_parser.add_argument("-o", "--output-directory", dest="output_directory", help="Output directory", default="out_dir") 
     cnv_parser.add_argument("-q", "--map-quality", dest="mapping_quality", help="Mapping Quality", default=30)
     cnv_parser.set_defaults(func=cnv_call_wrap)
-    
+  
     genotype_cnvs = subparsers.add_parser("gtcnvs", help="genotype CNVs and write VCF file")
     genotype_cnvs.add_argument("-i", "--input-file", dest="input_file", help="Input file", required=True)
     genotype_cnvs.add_argument("-t", "--temp-working-dir", dest="temp_dir", help="Reference file", default="tmp_dir") 
@@ -85,7 +85,6 @@ def parse_args():
     filtered_events_and_break_points.add_argument("-o", "--output-directory", dest="output_directory", help="Output directory", default="out_dir") 
     filtered_events_and_break_points.add_argument("-i", "--input-file", dest="input_file", help="Input file", required=True)
     filtered_events_and_break_points.set_defaults(func=filter_breaks)
-
 
     args = parser.parse_args()
     return args
@@ -117,7 +116,10 @@ def genotype_cnvs_wrap(args):
     for sample in in_file:
         # Have to align
         break_point_folder = os.path.join(args.output_directory,sample.samples_name,"breakpoints")
-        align.align_reads(sample,args.temp_dir, reference_file,skip=True)
+        # Need this for the short-read datasets
+        # TODO: Remove the skip=True
+        # TODO: Maybe automatically look for the input files.
+        align.align_reads(sample,args.temp_dir, reference_file, align_to_ref=True,skip=True)
         input_cnvs = (os.path.join(args.input_directory, sample.samples_name + ".cnv"))
         # Index and create fastas from fastq.
         fasta.index_fasta(sample, args.temp_dir)
@@ -140,6 +142,7 @@ def merge_vcf_wrap(args):
     """
     vcfs = args.vcfs
     in_file = input_file.InputFile(args.input_file, args.output_directory)
+    # TODO: Undo delete this line.
     merge_cnvs.merge_cnvs_clusters(vcfs, args.temp_dir,args.output_directory)
     merge_cnvs.merge_cnvs_indiv(vcfs, args.temp_dir,args.output_directory, in_file)
     #merge_cnvs.pairwise_cnvs(vcfs, args.temp_dir,args.output_directory, in_file)
@@ -178,7 +181,7 @@ def pilon_align_wrap(args):
     # If PE and SE files are present run pilon to fix the contigs otherwise just filter.
     for sample in in_file:
         temp_fasta = scaffold.scaffold_filter(sample.scaffolds, args.temp_dir, sample.min_contig_length)
-        align.align_reads(sample,args.temp_dir, temp_fasta, skip=True) 
+        align.align_reads(sample,args.temp_dir, temp_fasta) 
         pilon.run_pilon_contigs(sample, args.temp_dir, temp_fasta)
         # transfer the Pilon aligned bam files somewhere
         bwa_output = align.simple_bwa(sample, args.temp_dir, args.reference_file)

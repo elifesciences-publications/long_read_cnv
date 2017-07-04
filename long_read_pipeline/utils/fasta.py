@@ -77,6 +77,7 @@ def index_fasta(input_file, temp_dir, skip=False):
     cdbfasta = "cdbfasta {0}" 
     sed_conversion = "cat {0} > {1}"
     for i, pairs in enumerate(input_file.paired_end_list):
+        print(pairs)
         p1 = pairs[0]
         p2 = pairs[1]
         if i > 0:

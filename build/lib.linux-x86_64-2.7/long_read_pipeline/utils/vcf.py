@@ -63,7 +63,9 @@ def write_vcf_header(sample_name, file_name):
     file_name.write(default_vcf_header + "\t" + sample_name + "\n")
 
 def _convert_variant_type(variant_type):
-
+    """
+        Converts the varinat type from the .cnv format to the format used in the VCFs.
+    """
     if variant_type == "simple_deletion":
         return "DEL"
     if variant_type == "simple_duplication":
@@ -73,24 +75,10 @@ def _convert_variant_type(variant_type):
     if variant_type == "complex_deletion":
         return "DEL"
 
-
-
-
-
 def _create_info_string(cnv_row):
     """
-    
-
+        Creates VCF info string from information saved in CNV row files.
     """
-    ##INFO=<ID=SVTYPE,Number=1,Type=String,Description="Type of structural variant">
-    ##INFO=<ID=SVLEN,Number=.,Type=Integer,Description="Difference in length between REF and ALT alleles">
-    ##INFO=<ID=UNACCOUNTED_SEQUENCE,Number=.,Type=Integer,Description="Sequence that cannot be accounted for in the comparison of the alignments, +ve novel sequence, -ve deleted sequence overall">
-    ##INFO=<ID=BREAKSTART1,Number=1,Type=Integer,Description="End position of the variant described in this record">
-    ##INFO=<ID=BREAKEND1,Number=1,Type=Integer,Description="End position of the variant described in this record">
-    ##INFO=<ID=BREAKSTART2,Number=1,Type=Integer,Description="End position of the variant described in this record">
-    ##INFO=<ID=BREAKEND2,Number=1,Type=Integer,Description="End position of the variant described in this record">
-    ##INFO=<ID=STRANDS,Number=.,Type=String,Description="Strand orientation of the adjacency in BEDPE format (DEL:+-, DUP:-+, INV:++/--)">
-
     info_dict = collections.OrderedDict() 
     info_dict["SVTYPE"] = cnv_row.variant_type
     info_dict["SVLEN"] = cnv_row.svlen
@@ -112,14 +100,9 @@ def _create_info_string(cnv_row):
     return(out_string)
 
 def _create_gt_string(cnv_row):
-    ##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-    ##FORMAT=<ID=S,Number=1,Type=Integer,Description="Number of split reads supporting the variant">
-    ##FORMAT=<ID=NS,Number=1,Type=Integer,Description="Number of split reads not supporting the variant">
-    ##FORMAT=<ID=LS,Number=1,Type=Integer,Description="Number of split reads supporting the left breakpoint of this variant">
-    ##FORMAT=<ID=LNS,Number=1,Type=Integer,Description="Number of split reads not supporting the left breakpoint of this variant">
-    ##FORMAT=<ID=RS,Number=1,Type=Integer,Description="Number of split reads supporting the right breakpoint of this variant">
-    ##FORMAT=<ID=RNS,Number=1,Type=Integer,Description="Number of split reads not supporting the right breakpoint of this variant">
-    ##FORMAT=<ID=GQ,Number=1,Type=Float,Description="Number of split reads not supporting the right breakpoint of this variant">
+    """
+        Creates VCF gt string for a single-sample VCF.
+    """
     gt_dict = collections.OrderedDict()
     gt_dict["GT"] = cnv_row.GT
     gt_dict["S"] = cnv_row.S
@@ -172,13 +155,11 @@ def write_vcf_row(cnv_row, file_name,output_directory, sample_name):
         # Lets copy the FASTA files for both the breakpoints and the novel sequence
         # TODO: Fix hack to move folders
         novel_fasta = (os.path.join(novel_dir, cnv_row.event_id +'.fasta'))
-        print(novel_fasta)
         try:
             shutil.copy(novel_fasta, os.path.join(novel_dir_filtered, os.path.basename(novel_fasta))) 
         except IOError:
             pass
         reference_fasta = (os.path.join(reference_dir, cnv_row.event_id +'.fasta'))
-        print(reference_fasta)
         shutil.copy(reference_fasta, os.path.join(reference_dir_filtered, os.path.basename(reference_fasta))) 
     else:
         FILTER = "lowqual"
@@ -193,10 +174,8 @@ def write_vcf_row(cnv_row, file_name,output_directory, sample_name):
 
 class VCFSimpleRow(object):
     """
-
-        Simple VCF Row 
+        Class representing the row of a VCF, used exclusively in the VCFSimple class.
     """
-
 
     def __init__(self, row, ids=None):
         row_s = row.strip().split("\t")
@@ -304,7 +283,7 @@ class VCFSimpleRow(object):
 
 class VCFSimple(object):
     """
-        Simple VCF object
+        Class representing an entire VCF.
     """
     def __init__(self,vcf):
         self._vcf_dict=collections.OrderedDict()

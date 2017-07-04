@@ -38,7 +38,7 @@ def simple_bwa(input_file, temp_dir, reference_file):
     subprocess.check_call(bwa_index, shell=True)
     return bwa_sorted_output
 
-def align_reads(input_file, temp_dir, reference_genome, skip=False):
+def align_reads(input_file, temp_dir, reference_genome, skip=False, align_to_ref=False):
     """
         Align reads using speedseq
     """
@@ -56,8 +56,13 @@ def align_reads(input_file, temp_dir, reference_genome, skip=False):
         p2 = pairs[1]
         read_group = "@RG\\tID:{0}\\tSM:{0}\\tLB:lib".format(input_file.samples_name)
       #  logging.info("Running speedseq align on {0}".format(input_file.samples_name))
-        speed_seq_align = SPEEDSEQ_EXEC + " align " + " -o " + os.path.join(temp_dir, os.path.basename(p1))  + " -R \"{0}\"".format(read_group)+ " " +reference_genome + " " + p1 + " " + p2 
+        if not align_to_ref: 
+            speed_seq_align = SPEEDSEQ_EXEC + " align " + " -o " + os.path.join(temp_dir, os.path.basename(p1))  + " -R \"{0}\"".format(read_group)+ " " +reference_genome + " " + p1 + " " + p2 
+            bam_file = os.path.join(temp_dir, os.path.basename(p1)) +".bam"
+        else:
+            speed_seq_align = SPEEDSEQ_EXEC + " align " + " -o " + os.path.join(temp_dir, os.path.basename(p1)) + ".ref"  + " -R \"{0}\"".format(read_group)+ " " +reference_genome + " " + p1 + " " + p2  
+            # Remove bam files
+            bam_file = os.path.join(temp_dir, os.path.basename(p1)) + ".ref.bam" 
         if not skip:
             subprocess.check_call(speed_seq_align,shell=True)
-        bam_file = os.path.join(temp_dir, os.path.basename(p1)) +".bam"
         input_file.set_bam_file(bam_file)

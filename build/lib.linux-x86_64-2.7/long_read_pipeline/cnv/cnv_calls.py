@@ -135,12 +135,13 @@ class CNVrow(object):
             Filter reads.
 
             @author James Boocock
+
             @date 10 Feb 2017
         """
         
         return None
 
-    def _get_left_bp(self, slop, mapping_quality, duplication=False, clip_size=5, add_slash=False, allow_slop=False): 
+    def _get_left_bp(self, slop, mapping_quality, duplication=False, clip_size=5, add_slash=False, allow_slop=False, inversion=False): 
         """
             Get the left break point
         """
@@ -377,14 +378,18 @@ class CNVrow(object):
             duplication = True
         else:
             duplication = False
-        # hack 
+        # hack
+        if "inversion" in self._variant_type:
+            inversion=True
+        else:
+            inversion=False
         if tmp_bam_file is not None:
             sample = os.path.basename(tmp_bam_file).split(".")[0]
         else:
             sample = (os.path.dirname(self._break_point_folder).split("/")[len(os.path.dirname(self._break_point_folder).split("/"))-1])
         if sample == "RMx" or sample == "BYa" or sample == "RM" or sample == "BY":
             add_slash =True 
-        left_support, left_no_support = self._get_left_bp(slop, mapping_quality, duplication=duplication, add_slash=add_slash,allow_slop=allow_slop)
+        left_support, left_no_support = self._get_left_bp(slop, mapping_quality, duplication=duplication, add_slash=add_slash,allow_slop=allow_slop) 
         right_support, right_no_support = self._get_right_bp(slop, mapping_quality, duplication=duplication, add_slash=add_slash,allow_slop=allow_slop)
         # Fisher's exact to ensure we are sampling both ends of the breakpoint
         (GQ, GT, SQ)= gt_likelihoods.genotype_likelihoods(left_support + right_support, left_no_support + right_no_support, duplication)

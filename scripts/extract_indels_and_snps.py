@@ -51,7 +51,11 @@ VCF_HEADER="""##fileformat=VCFv4.1
 ##contig=<ID=chrXIV,length=784333,assembly="sacCer3">
 ##contig=<ID=chrXV,length=1091291,assembly="sacCer3">
 ##contig=<ID=chrXVI,length=948066,assembly="sacCer3">
-##contig=<ID=chrM,length=85779,assembly="sacCer3">"""
+##contig=<ID=chrM,length=85779,assembly="sacCer3">
+##FORMAT=<ID=AD,Number=.,Type=Integer,Description="Allelic depths for the ref and alt alleles in the order listed">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth (reads with MQ=255 or with bad mates are filtered)">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+"""
 
 
 def get_cigar_start(cigar_tuple):
@@ -78,15 +82,24 @@ def cig_start_clip(cigar_tuple):
 
 class Variants(object):
 
-    def __init__(self, chrom, pos, ref,alt, read_id, variant_id):
+    def __init__(self, chrom, pos, ref,alt, variant_id, variant_type):
         self._chrom = chrom
         self._pos = pos
         self._ref = ref
         self._alt = alt
-        self._read_ids = [read_id]
-        self._read_count = 1
+        self._read_ids = []
+        self._read_count = 0
+        self._not_supporting_count = 0
         self._variant_id = variant_id
+        self._variant_type = variant_type
+        if self.alt != self.ref:
+            self._alts = [self.alt]
+        else:
+            self._alts = []
 
+    @property
+    def variant_type(self):
+        return self._variant_type
     @property
     def variant_id(self):
         return self._variant_id
@@ -110,15 +123,32 @@ class Variants(object):
     def read_count(self):
         return self._read_count
 
+    def set_alt(self, alt):
+        if self.alt == self.ref:
+            self._alt = alt
+            self._alts.append(alt)
+        elif self.alt != alt:
+            self._alts.append(alt)
+    
     def add_supporting(self, read_id):
+        """
+            Add supporting reads.
+        """
         self._read_count +=1 
         self._read_ids.append(read_id)
-    
+
+    def add_not_supporting(self, read_id):
+        """
+            Add not supporting reads.
+        """
+        self._not_supporting_count +=1
+        self._read_ids.append(read_id)
+
     def _get_gt_string(self):
         return self.alt
 
     def __str__(self):
-        return self.chrom +"\t" + str(self.pos) + "\t" + self.variant_id + "\t" + self.ref + "\t" + self.alt + "\t.\t.\tREADID=" + ",".join(self.read_ids) + "\tGT:DP\t"+ "1:"+str(self.read_count)
+        return self.chrom +"\t" + str(self.pos) + "\t" + self.variant_id + "\t" + self.ref + "\t" + ','.join(self._alts) + "\t.\t.\tVARIANT_TYPE="+self.variant_type +";READID=" + ",".join(self.read_ids) + "\tGT:DP:AD\t"+ "1/1:"+str(self.read_count +self._not_supporting_count) + ":" + str(self._not_supporting_count) + "," + str(self.read_count)
 
 variants = {}
 
@@ -139,7 +169,10 @@ def _scan_read_for_variants(fastq_subset, read_subset, cigartuples, start_refere
         if next_index == (i) or insertion: 
             matches = False
             insertion = False
-            deletion = False 
+            deletion = False
+            #print(read_id)
+            #print(cigartuples)
+            #print(cigar_tuple_index)
             if cigartuples[cigar_tuple_index][0] == 0: 
                 next_index += cigartuples[cigar_tuple_index][1] 
                 matches = True
@@ -152,17 +185,31 @@ def _scan_read_for_variants(fastq_subset, read_subset, cigartuples, start_refere
                 del_length = cigartuples[cigar_tuple_index][1] 
                 deletion = True  
                 next_index += del_length
+            elif cigartuples[cigar_tuple_index][0] == 4 or cigartuples[cigar_tuple_index][0] == 5:
+                break
             cigar_tuple_index += 1
+            #print(len(cigartuples))
+            if cigar_tuple_index >= (len(cigartuples)):
+                break
         pos = start_reference + i + 1
         if matches:
+            # Make sure that position doesn't already have a read!!!!! Cause it might have a non-supporting alignment.
+            ref = fastq_subset[i]
+            alt = read_subset[read_index]
+            ids = chrom + ":" + str(pos) + "_" + ref 
             if fastq_subset[i] != read_subset[read_index]:
-                ref = fastq_subset[i]
-                alt = read_subset[read_index]
-                ids = chrom + ":" + str(pos) + "_" + ref + "/" + alt
                 try:
-                    variants[ids].add_supporting(read_id) 
+                    variants[ids].add_supporting(read_id)
+                    variants[ids].set_alt(alt)
                 except KeyError:
-                    variants[ids] = Variants(chrom, pos, ref, alt, read_id, ids) 
+                    variants[ids] = Variants(chrom, pos, ref, alt, ids,"SNP") 
+                    variants[ids].add_supporting(read_id)
+            else:
+                try:
+                    variants[ids].add_not_supporting(read_id)
+                except KeyError:
+                    variants[ids] = Variants(chrom, pos, ref, alt, ids,"SNP") 
+                    variants[ids].add_not_supporting(read_id)
 
             read_index += 1
             i += 1
@@ -174,7 +221,8 @@ def _scan_read_for_variants(fastq_subset, read_subset, cigartuples, start_refere
             try:
                 variants[ids].add_supporting(read_id) 
             except KeyError:
-                variants[ids] = Variants(chrom, pos, ref, alt, read_id, ids) 
+                variants[ids] = Variants(chrom, pos, ref, alt,  ids,"INDEL") 
+                variants[ids].add_supporting(read_id)
         elif deletion:
             ref =  fastq_subset[(i-1):i+del_length]
             alt = read_subset[read_index+1]
@@ -183,7 +231,8 @@ def _scan_read_for_variants(fastq_subset, read_subset, cigartuples, start_refere
             try:
                 variants[ids].add_supporting(read_id) 
             except KeyError:
-                variants[ids] = Variants(chrom, pos, ref, alt, read_id, ids) 
+                variants[ids] = Variants(chrom, pos, ref, alt, ids,"INDEL") 
+                variants[ids].add_supporting(read_id)
 
 def extract_sequence_from_alignments(bam_file, reference_genome):
 
@@ -193,11 +242,12 @@ def extract_sequence_from_alignments(bam_file, reference_genome):
     global variants
     sample_name = (os.path.basename(bam_file).split(".")[0])
     print(VCF_HEADER)
-    print("CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t"+ sample_name)
+    print("#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT\t"+ sample_name)
     for ref_seq in ref_sequences:
         reads_in_ref = bam_in.fetch(reference=ref_seq)
         fastq_tmp = ref_genome.fetch(reference=ref_seq)
         for read in reads_in_ref:
+            # TODO change it so it isn't fixed at mapping quality 30 ....
             if read.mapping_quality > 30:
                 start_read = get_cigar_start(read.cigartuples)
                 end_read = read.query_length + get_cigar_end(read.cigartuples)
@@ -208,7 +258,8 @@ def extract_sequence_from_alignments(bam_file, reference_genome):
                 _scan_read_for_variants(fastq_subset, read_subset, read.cigartuples, start_reference, ref_seq, read.query_name) 
         tuple_list = (sorted(variants.items(), key=lambda x: x[1].pos))
         for ids, variant in tuple_list:
-            print(str(variant))
+            if variant.read_count > 0:
+                print(str(variant))
             #continue
         variants = {}
             # variant scan, scan the long reads for variants

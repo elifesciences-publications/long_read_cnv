@@ -34,5 +34,5 @@ def run_pilon_contigs(input_file, temp_dir, temp_fasta=None):
         pilon_jar = " java -Xmx4G -jar {0} --genome {1} --frags {2} --outdir {3} --output {4}".format(PILON_PATH, temp_fasta, input_file.bam_file, temp_dir, input_file.samples_name) 
     output_file = os.path.join(temp_dir, input_file.samples_name + ".fasta")
     input_file.set_pilon_fasta(output_file)
-    #subprocess.check_call(pilon_jar, shell=True)
+    subprocess.check_call(pilon_jar, shell=True)
 

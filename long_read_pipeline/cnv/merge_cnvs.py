@@ -444,7 +444,7 @@ def merge_cnvs_indiv(vcfs, temp_dir, output_directory, in_file):
         header_tmp += """\n#CHROM\tPOS\tID\tREF\tALT\tQUAL\tFILTER\tINFO\tFORMAT""" + "\t" + "\t".join(basenames)
         # Need to add Sample Quality to our files
         sample_this = [item for item in in_file if item.samples_name == basenames[j]][0] 
-        align.align_reads(sample_this,temp_dir, "test.fa", skip=True)
+        align.align_reads(sample_this,temp_dir, "test.fa", skip=True,align_to_ref=True)
         vcf_new_this = os.path.join(output_directory, sample_this.samples_name+".vcf.gz")
         output_vcf_f.write(header_tmp + "\n")
         fasta.index_fasta(sample_this, temp_dir, skip=True)
@@ -471,7 +471,7 @@ def merge_cnvs_indiv(vcfs, temp_dir, output_directory, in_file):
                     gt_string = vcf._create_gt_string(cnvs.input_rows[i])  
                     tmp_vcf_row.add_sample(sample.samples_name, tmp_vcf_row.info, gt_string)
                 else:
-                    align.align_reads(sample,temp_dir, "test.fa", skip=True)
+                    align.align_reads(sample,temp_dir, "test.fa", skip=True,align_to_ref=True)
                     #input_cnvs = (os.path.join(input_directory, sample.samples_name + ".cnv"))
                     # Index and create fastas from fastq.
                     cnvs.extract_windowed_bam_reads_other_samples(i,sample.bam_file)
