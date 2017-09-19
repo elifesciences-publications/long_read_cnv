@@ -54,8 +54,7 @@ VCF_HEADER="""##fileformat=VCFv4.1
 ##contig=<ID=chrM,length=85779,assembly="sacCer3">
 ##FORMAT=<ID=AD,Number=.,Type=Integer,Description="Allelic depths for the ref and alt alleles in the order listed">
 ##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Approximate read depth (reads with MQ=255 or with bad mates are filtered)">
-##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
-"""
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">"""
 
 
 def get_cigar_start(cigar_tuple):
@@ -173,6 +172,8 @@ def _scan_read_for_variants(fastq_subset, read_subset, cigartuples, start_refere
             #print(read_id)
             #print(cigartuples)
             #print(cigar_tuple_index)
+            if cigar_tuple_index >= (len(cigartuples)):
+                break
             if cigartuples[cigar_tuple_index][0] == 0: 
                 next_index += cigartuples[cigar_tuple_index][1] 
                 matches = True
@@ -187,10 +188,8 @@ def _scan_read_for_variants(fastq_subset, read_subset, cigartuples, start_refere
                 next_index += del_length
             elif cigartuples[cigar_tuple_index][0] == 4 or cigartuples[cigar_tuple_index][0] == 5:
                 break
-            cigar_tuple_index += 1
             #print(len(cigartuples))
-            if cigar_tuple_index >= (len(cigartuples)):
-                break
+            cigar_tuple_index += 1
         pos = start_reference + i + 1
         if matches:
             # Make sure that position doesn't already have a read!!!!! Cause it might have a non-supporting alignment.
@@ -210,7 +209,6 @@ def _scan_read_for_variants(fastq_subset, read_subset, cigartuples, start_refere
                 except KeyError:
                     variants[ids] = Variants(chrom, pos, ref, alt, ids,"SNP") 
                     variants[ids].add_not_supporting(read_id)
-
             read_index += 1
             i += 1
         elif insertion:

@@ -5,3 +5,4 @@ tmp_dir/*
 scirpts/*
 build/*
 dist/*
+scripts/test_dir/*
