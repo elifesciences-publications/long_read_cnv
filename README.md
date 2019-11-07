@@ -1,3 +1,4 @@
+### This code is associated with the paper from Bloom et al., "Rare variants contribute disproportionately to quantitative trait variation in yeast". eLife, 2019. http://dx.doi.org/10.7554/eLife.49212
 # Long-read hybrid CNV caller (LRHCNV)
 
 LRHCNV utilises long-reads and short-reads to call structural variants. 
